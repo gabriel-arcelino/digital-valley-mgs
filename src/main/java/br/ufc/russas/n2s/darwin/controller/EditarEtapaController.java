@@ -219,7 +219,7 @@ public class EditarEtapaController {
 		Periodo novoP = (Periodo) etapaBeans.getPeriodo().toBusiness();
 		for (EtapaBeans sub : subsequentes) {
 			if (sub.getPrerequisito() != null && sub.getPrerequisito().getCodEtapa() == codEtapa) {
-				if (etapa.getRecurso() != null && !etapaBeans.getRecurso().getPeriodo().getTermino().isBefore(sub.getPeriodo().getInicio())) {
+				if (etapaBeans.getRecurso() != null && !etapaBeans.getRecurso().getPeriodo().getTermino().isBefore(sub.getPeriodo().getInicio())) {
 					throw new Exception(
 							"O termino do período de recurso não pode ser depois do início da próxima etapa!");
 				}
