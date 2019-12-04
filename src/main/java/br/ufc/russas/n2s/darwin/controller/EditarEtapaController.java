@@ -219,7 +219,7 @@ public class EditarEtapaController {
 		Periodo novoP = (Periodo) etapaBeans.getPeriodo().toBusiness();
 		for (EtapaBeans sub : subsequentes) {
 			if (sub.getPrerequisito() != null && sub.getPrerequisito().getCodEtapa() == codEtapa) {
-				if (!etapaBeans.getRecurso().getPeriodo().getTermino().isBefore(sub.getPeriodo().getInicio())) {
+				if (etapa.getRecurso() != null && !etapaBeans.getRecurso().getPeriodo().getTermino().isBefore(sub.getPeriodo().getInicio())) {
 					throw new Exception(
 							"O termino do período de recurso não pode ser depois do início da próxima etapa!");
 				}
@@ -304,6 +304,7 @@ public class EditarEtapaController {
 					}
 				} else {
 					EtapaBeans proximaEtapa = null;
+										
 					for (EtapaBeans e : selecao.getEtapas()) {
 						if (e.getPrerequisito().getCodEtapa() == etapaBeans.getCodEtapa()) {
 							proximaEtapa = e;
@@ -328,7 +329,7 @@ public class EditarEtapaController {
 								etapaBeans, novoPeriodo, request);
 					}
 				}
-
+								
 				if (editadaComSucesso) {
 					this.getSelecaoServiceIfc().setUsuario(usuario);
 					int index = 0;
@@ -450,7 +451,7 @@ public class EditarEtapaController {
 					Periodo novoP = (Periodo) inscricaoBeans.getPeriodo().toBusiness();
 					for (EtapaBeans sub : subsequentes) {
 						if (sub.getPrerequisito() != null && sub.getPrerequisito().getCodEtapa() == codInscricao){
-							if (!inscricaoBeans.getRecurso().getPeriodo().getTermino().isBefore(sub.getPeriodo().getInicio())) {
+							if (inscricaoBeans.getRecurso() != null && !inscricaoBeans.getRecurso().getPeriodo().getTermino().isBefore(sub.getPeriodo().getInicio())) {
 								throw new Exception(
 										"O termino do período de recurso não pode ser depois do início da próxima etapa!");
 							}

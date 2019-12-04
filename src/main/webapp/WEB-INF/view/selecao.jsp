@@ -641,7 +641,7 @@ ul {
 												href="${pageContext.request.contextPath}/removerEtapa/${selecao.codSelecao}/${etapa.codEtapa}"
 												class="btn btn-primary btn-sm" data-toggle="modal"
 												data-target="#removerEtapa-${etapa.codEtapa}"
-												style="height: 30px;"> <i class="fas fa-trash-alt"></i>
+												style="height: 30px; margin-top: 5px;"> <i class="fas fa-trash-alt"></i>
 												Remover etapa
 											</a>
 										</c:if>
