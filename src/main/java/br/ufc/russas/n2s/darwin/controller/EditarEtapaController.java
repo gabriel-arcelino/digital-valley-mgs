@@ -465,88 +465,77 @@ public class EditarEtapaController {
 						}
 					}
 					
-					if (!selecao.isDivulgada() || usuario.getPermissoes().contains(EnumPermissao.ADMINISTRADOR)) {
+					if (inscricaoBeans.getEstado() == EnumEstadoEtapa.ESPERA) {
+						String[] codAvaliadores = request.getParameterValues("codAvaliadores");
+						String[] documentosExigidos = request.getParameterValues("documentosExigidos");
+						String[] documentosOpcionais = request.getParameterValues("documentosOpcionais");
+						inscricaoBeans.setTitulo(inscricao.getTitulo());
+						inscricaoBeans.setDescricao(inscricao.getDescricao());
 
-						if (inscricaoBeans.getEstado() == EnumEstadoEtapa.ESPERA) {
-							String[] codAvaliadores = request.getParameterValues("codAvaliadores");
-							String[] documentosExigidos = request.getParameterValues("documentosExigidos");
-							String[] documentosOpcionais = request.getParameterValues("documentosOpcionais");
-							inscricaoBeans.setTitulo(inscricao.getTitulo());
-							inscricaoBeans.setDescricao(inscricao.getDescricao());
-
-							ArrayList<UsuarioBeans> avaliadores = new ArrayList<>();
-							try {
-								if (codAvaliadores != null) {
-									for (String cod : codAvaliadores) {
-										if (cod.contains("-")) {
-											cod = cod.substring(0, cod.indexOf("-"));
-										}
-										UsuarioBeans u = this.getUsuarioServiceIfc().getUsuario(Long.parseLong(cod), 0);
-										if (u != null) {
-											avaliadores.add(u);
-										}
+						ArrayList<UsuarioBeans> avaliadores = new ArrayList<>();
+						try {
+							if (codAvaliadores != null) {
+								for (String cod : codAvaliadores) {
+									if (cod.contains("-")) {
+										cod = cod.substring(0, cod.indexOf("-"));
 									}
-									if (avaliadores.size() > 1 && (inscricaoBeans
-											.getCriterioDeAvaliacao() == EnumCriterioDeAvaliacao.APROVACAO
-											|| inscricaoBeans
-													.getCriterioDeAvaliacao() == EnumCriterioDeAvaliacao.DEFERIMENTO)) {
-										session.setAttribute("mensagem",
-												"Esta etapa só pode ter um avaliador devido ao critério de avaliação escolhido.");
-										session.setAttribute("status", "danger");
-										return "redirect:/editarEtapa/" + codSelecao + "/" + codInscricao;
+									UsuarioBeans u = this.getUsuarioServiceIfc().getUsuario(Long.parseLong(cod), 0);
+									if (u != null) {
+										avaliadores.add(u);
 									}
 								}
-							} catch (NumberFormatException e) {
-								session.setAttribute("mensagem", "Ocorreu um erro ao cadastrar avaliador(es)!");
-								session.setAttribute("status", "danger");
-								return "redirect:/editarEtapa/" + codSelecao + "/" + codInscricao;
-							}
-							if (documentosExigidos != null) {
-								ArrayList<String> docs = new ArrayList<>();
-								for (String documento : documentosExigidos) {
-									docs.add(documento);
+								if (avaliadores.size() > 1 && (inscricaoBeans
+										.getCriterioDeAvaliacao() == EnumCriterioDeAvaliacao.APROVACAO
+										|| inscricaoBeans
+												.getCriterioDeAvaliacao() == EnumCriterioDeAvaliacao.DEFERIMENTO)) {
+									session.setAttribute("mensagem",
+											"Esta etapa só pode ter um avaliador devido ao critério de avaliação escolhido.");
+									session.setAttribute("status", "danger");
+									return "redirect:/editarEtapa/" + codSelecao + "/" + codInscricao;
 								}
-								inscricaoBeans.setDocumentacaoExigida(docs);
-							} else {
-								inscricaoBeans.setDocumentacaoExigida(new ArrayList<>());
 							}
-
-							if (documentosOpcionais != null) {
-								ArrayList<String> docsOp = new ArrayList<>();
-								for (String documento : documentosOpcionais) {
-									docsOp.add(documento);
-								}
-								inscricaoBeans.setDocumentacaoOpcional(docsOp);
-							} else {
-								inscricaoBeans.setDocumentacaoOpcional(new ArrayList<>());
+						} catch (NumberFormatException e) {
+							session.setAttribute("mensagem", "Ocorreu um erro ao cadastrar avaliador(es)!");
+							session.setAttribute("status", "danger");
+							return "redirect:/editarEtapa/" + codSelecao + "/" + codInscricao;
+						}
+						if (documentosExigidos != null) {
+							ArrayList<String> docs = new ArrayList<>();
+							for (String documento : documentosExigidos) {
+								docs.add(documento);
 							}
-							inscricaoBeans.setAvaliadores(avaliadores);
+							inscricaoBeans.setDocumentacaoExigida(docs);
+						} else {
+							inscricaoBeans.setDocumentacaoExigida(new ArrayList<>());
 						}
 
-						this.getSelecaoServiceIfc().setUsuario(usuario);
-						selecao.setInscricao(inscricaoBeans);
-						selecao = this.getSelecaoServiceIfc().atualizaSelecao(selecao);
-						this.getLogServiceIfc()
-								.adicionaLog(new Log(LocalDate.now(), (UsuarioDarwin) usuario.toBusiness(),
-										(Selecao) selecao.toBusiness(),
-										"O(A) usuario(a) " + usuario.getNome() + " modificou a etapa "
-												+ inscricaoBeans.getTitulo() + " na seleção " + selecao.getTitulo()
-												+ " em " + LocalDate.now() + "."));
-						session.setAttribute("selecao", selecao);
-						session.setAttribute("mensagem",
-								"Etapa " + inscricaoBeans.getTitulo() + " atualizada com sucesso!");
-						session.setAttribute("status", "success");
-						return "redirect:/selecao/" + selecao.getCodSelecao();
+						if (documentosOpcionais != null) {
+							ArrayList<String> docsOp = new ArrayList<>();
+							for (String documento : documentosOpcionais) {
+								docsOp.add(documento);
+							}
+							inscricaoBeans.setDocumentacaoOpcional(docsOp);
+						} else {
+							inscricaoBeans.setDocumentacaoOpcional(new ArrayList<>());
+						}
+						inscricaoBeans.setAvaliadores(avaliadores);
 					}
 
 					this.getSelecaoServiceIfc().setUsuario(usuario);
 					selecao.setInscricao(inscricaoBeans);
 					selecao = this.getSelecaoServiceIfc().atualizaSelecao(selecao);
+					this.getLogServiceIfc()
+							.adicionaLog(new Log(LocalDate.now(), (UsuarioDarwin) usuario.toBusiness(),
+									(Selecao) selecao.toBusiness(),
+									"O(A) usuario(a) " + usuario.getNome() + " modificou a etapa "
+											+ inscricaoBeans.getTitulo() + " na seleção " + selecao.getTitulo()
+											+ " em " + LocalDate.now() + "."));
 					session.setAttribute("selecao", selecao);
 					session.setAttribute("mensagem",
 							"Etapa " + inscricaoBeans.getTitulo() + " atualizada com sucesso!");
 					session.setAttribute("status", "success");
 					return "redirect:/selecao/" + selecao.getCodSelecao();
+					
 				}
 
 			} else {
