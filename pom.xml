@@ -11,21 +11,27 @@
 
 	<name>Darwin</name>
 
-	<repositories>
-		<repository>
-			<id>jitpack.io</id>
-			<url>https://jitpack.io</url>
-		</repository>
-	</repositories>
-
 	<properties>
 		<java.version>1.8</java.version>
 	</properties>
 
+	<distributionManagement>
+		<repository>
+			<id>central</id>
+			<name>servern2s-releases</name>
+			<url>http://192.169.1.2:8081/artifactory/br.com.n2s</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<name>servern2s-snapshots</name>
+			<url>http://192.169.1.2:8081/artifactory/br.com.n2s</url>
+		</snapshotRepository>
+	</distributionManagement>
+
 	<dependencies>
 		<dependency>
-			<groupId>com.github.andersori</groupId>
-			<artifactId>digital-valley-core</artifactId>
+			<groupId>br.com.n2s</groupId>
+			<artifactId>core.n2s</artifactId>
 			<version>1.6.1</version>
 		</dependency>
 		<dependency>
