@@ -1,12 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufc.russas.n2s.darwin.dao;
 
 import java.util.List;
-import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 
 /**
@@ -20,7 +14,7 @@ public interface DAOIfc<T> {
      *
      * @return SessionFactory
      */
-    SessionFactory getSessionFactory();
+	public SessionFactory getSessionFactory();
 
     /**
      * Método resposável por fazer a persistência de um objeto qualquer,
@@ -31,7 +25,7 @@ public interface DAOIfc<T> {
      * T - objeto genérico que assumi a forma da classe que está sendo
      * persistida, que contém anotações Hibernate.
      */
-    T adiciona(T object);
+	public T adiciona(T object);
 
     /**
      * Método resposável por fazer a atualização de um objeto qualquer,
@@ -42,7 +36,7 @@ public interface DAOIfc<T> {
      * T - objeto genérico que assumi a forma da classe que está sendo
      * atualizada, que contém anotações Hibernate.
      */
-    T atualiza(T object);
+	public T atualiza(T object);
 
     /**
      * Método resposável por fazer a remoção de um objeto qualquer,
@@ -50,7 +44,7 @@ public interface DAOIfc<T> {
      * @param object
      * obejct - um objeto qualquer que contenha anotações Hibernate
      */
-    void remove(T object);
+	public void remove(T object);
 
     /**
      * Método resposável por retornar um Criteria básico de todas os objetos
@@ -61,7 +55,7 @@ public interface DAOIfc<T> {
      * List<T> -  lista com os objetos da classe que se deseja obter as
      * instâncias.
      */
-    List<T> lista(T object);
+	public List<T> lista(T object);
 
     /**
      * Método resposável por pegar do banco de dados uma objeto que contém
@@ -75,5 +69,6 @@ public interface DAOIfc<T> {
      * T - objeto genérico que pode assumir a forma de uma classe anotada com
      * Hibernate
      */
-    T getObject(T object, long codObject);
+	public T getObject(T object, long codObject);
+    
 }

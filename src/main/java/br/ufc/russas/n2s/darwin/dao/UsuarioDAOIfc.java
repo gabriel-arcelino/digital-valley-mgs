@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufc.russas.n2s.darwin.dao;
 
 import br.ufc.russas.n2s.darwin.model.UsuarioDarwin;
@@ -17,38 +12,31 @@ public interface UsuarioDAOIfc {
      * Método resposável por fazer a persistência de uma etapa.
      * @param etapa
      */
-    UsuarioDarwin adicionaUsuario(UsuarioDarwin usuario);
+    public UsuarioDarwin adicionaUsuario(UsuarioDarwin usuario);
 
     /**
      * Método resposável por fazer a atualização de uma etapa.
      * @param etapa
      */
-    UsuarioDarwin atualizaUsuario(UsuarioDarwin usuario);
+    public UsuarioDarwin atualizaUsuario(UsuarioDarwin usuario);
 
     /**
      * Método resposável por fazer a remoção de uma etapa.
      * @param etapa
      */
-    void removeUsuario(UsuarioDarwin usuario);
+    public void removeUsuario(UsuarioDarwin usuario);
 
     /**
      * Método resposável por fazer a listagem de todas os usuários.
      * @return List<Etapa>
      */
-    List<UsuarioDarwin> listaUsuarios(UsuarioDarwin usuario);
+    public List<UsuarioDarwin> listaUsuarios(UsuarioDarwin usuario);
 
     /**
      * Método resposável por fazer a listagem de todas os usuários.
      * @return List<Etapa>
      */
-    List<UsuarioDarwin> BuscaUsuariosPorNome(String nome);
-    /**
-     * Método resposável por pegar do banco de dados uma etapa a partir do
-     * código informado.
-     * @param codEtapa
-     * @return Etapa
-     */
-    UsuarioDarwin getUsuario(UsuarioDarwin usuario);
+    public List<UsuarioDarwin> BuscaUsuariosPorNome(String nome);
     
     /**
      * Método resposável por pegar do banco de dados uma etapa a partir do
@@ -56,7 +44,16 @@ public interface UsuarioDAOIfc {
      * @param codEtapa
      * @return Etapa
      */
-    UsuarioDarwin getUsuarioControleDeAcesso(UsuarioDarwin usuario);
+    public UsuarioDarwin getUsuario(UsuarioDarwin usuario);
     
-    List<UsuarioDarwin> ListaEmOdermAlfabetica();
+    /**
+     * Método resposável por pegar do banco de dados uma etapa a partir do
+     * código informado.
+     * @param codEtapa
+     * @return Etapa
+     */
+    public UsuarioDarwin getUsuarioControleDeAcesso(UsuarioDarwin usuario);
+    
+    
+    public List<UsuarioDarwin> ListaEmOdermAlfabetica();
 }

@@ -16,7 +16,7 @@
         </style>
     </head>
     <body>
-        <a href="/Darwin/" type="button" class="btn btn-secondary">
+        <a href="${pageContext.request.contextPath}/" type="button" class="btn btn-secondary">
             <i class="material-icons">arrow_back</i>
         </a>
     </body>

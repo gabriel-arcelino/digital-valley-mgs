@@ -1,8 +1,3 @@
-/*
-3 * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufc.russas.n2s.darwin.dao;
 
 import java.util.List;
@@ -73,6 +68,7 @@ public class UsuarioDAOImpl implements UsuarioDAOIfc{
         }
     }
     @Override
+    @SuppressWarnings("unchecked")
     public List<UsuarioDarwin> BuscaUsuariosPorNome(String nome) {
     	Session session = this.daoImpl.getSessionFactory().openSession();
         Transaction t = session.beginTransaction();
@@ -92,6 +88,7 @@ public class UsuarioDAOImpl implements UsuarioDAOIfc{
     }
     
     @Override
+    @SuppressWarnings("unchecked")
     public List<UsuarioDarwin> ListaEmOdermAlfabetica() {
     	Session session = this.daoImpl.getSessionFactory().openSession();
         Transaction t = session.beginTransaction();

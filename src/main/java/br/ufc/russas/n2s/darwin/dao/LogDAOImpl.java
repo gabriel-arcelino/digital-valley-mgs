@@ -3,7 +3,6 @@ package br.ufc.russas.n2s.darwin.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import br.ufc.russas.n2s.darwin.model.Log;
 
@@ -21,6 +20,5 @@ public class LogDAOImpl implements LogDAOIfc{
 	public void adicionaLog(Log log) {
 		this.daoImpl.adiciona(log);
 	}
-	
 
 }

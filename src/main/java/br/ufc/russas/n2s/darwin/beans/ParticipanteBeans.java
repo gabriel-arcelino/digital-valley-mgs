@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufc.russas.n2s.darwin.beans;
 
 import java.io.Serializable;
@@ -14,11 +9,8 @@ import br.ufc.russas.n2s.darwin.model.UsuarioDarwin;
  *
  * @author N2S-PC03
  */
-public class ParticipanteBeans implements Beans, Serializable {
+public class ParticipanteBeans implements Beans, Serializable, Comparable<ParticipanteBeans> {
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = -7716688766048886533L;
 	
 	private long codParticipante;
@@ -109,5 +101,19 @@ public class ParticipanteBeans implements Beans, Serializable {
         } else {
             throw new NullPointerException("Participante não pode ser nulo!");
         }
+    }
+    public int compareTo(ParticipanteBeans participante) {
+        if(this.getCandidato().getNome().compareTo(participante.getCandidato().getNome())<0){
+           
+            return -1;
+
+        }
+
+        else if(this.getCandidato().getNome().compareTo(participante.getCandidato().getNome())>0){
+            return 1;
+
+        }
+        
+        return 0;
     }
 }

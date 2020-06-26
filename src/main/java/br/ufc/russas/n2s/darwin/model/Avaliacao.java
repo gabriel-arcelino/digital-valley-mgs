@@ -26,95 +26,101 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "avaliacao")
 public class Avaliacao implements Serializable {
-  
+
 	private static final long serialVersionUID = -62944345727642881L;
-	
+
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "codAvaliacao")
-    private long codAvaliacao;
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    @JoinColumn(name = "participante", referencedColumnName = "codParticipante")
-    private Participante participante;
-    private float nota;
-    private boolean aprovado;
-    private String observacao;
-    @Column
-    @Enumerated(EnumType.ORDINAL)
-    private EnumEstadoAvaliacao estado;
-    @ManyToOne
-    @JoinColumn(name = "avaliador", referencedColumnName = "codUsuario")
-    private UsuarioDarwin avaliador;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "codAvaliacao")
+	private long codAvaliacao;
 
-    public long getCodAvaliacao() {
-        return codAvaliacao;
-    }
+	@ManyToOne(cascade = { CascadeType.PERSIST })
+	@JoinColumn(name = "participante", referencedColumnName = "codParticipante")
+	private Participante participante;
 
-    public void setCodAvaliacao(long codAvaliacao) {
-        if (codAvaliacao > 0) {
-            this.codAvaliacao = codAvaliacao;
-        }
-    }
+	private float nota;
 
-    public Participante getParticipante() {
-        return participante;
-    }
+	private boolean aprovado;
+	
+	private String observacao;
+	
+	@Column
+	@Enumerated(EnumType.ORDINAL)
+	private EnumEstadoAvaliacao estado;
+	
+	@ManyToOne
+	@JoinColumn(name = "avaliador", referencedColumnName = "codUsuario")
+	private UsuarioDarwin avaliador;
 
-    public void setParticipante(final Participante participante) {
-        if (participante != null) {
-            this.participante = participante;
-        } else {
-            throw new NullPointerException("Participante deve ser informado!");
-        }
-    }
+	public long getCodAvaliacao() {
+		return codAvaliacao;
+	}
 
-    public float getNota() {
-        return nota;
-    }
+	public void setCodAvaliacao(long codAvaliacao) {
+		if (codAvaliacao > 0) {
+			this.codAvaliacao = codAvaliacao;
+		}
+	}
 
-    public void setNota(float nota) {
-        if (nota >= 0 && nota <= 10) {
-            this.nota = nota;
-        } else {
-            throw new IllegalArgumentException("Nota inválida! A nota deve ser maior ou igual a zero e menor ou igual a dez!");
-        }
-    }
+	public Participante getParticipante() {
+		return participante;
+	}
 
-    public boolean isAprovado() {
-        return aprovado;
-    }
+	public void setParticipante(final Participante participante) {
+		if (participante != null) {
+			this.participante = participante;
+		} else {
+			throw new NullPointerException("Participante deve ser informado!");
+		}
+	}
 
-    public void setAprovado(final boolean aprovado) {
-        this.aprovado = aprovado;
-    }
+	public float getNota() {
+		return nota;
+	}
 
-    public String getObservacao() {
-        return observacao;
-    }
+	public void setNota(float nota) {
+		if (nota >= 0 && nota <= 10) {
+			this.nota = nota;
+		} else {
+			throw new IllegalArgumentException(
+					"Nota inválida! A nota deve ser maior ou igual a zero e menor ou igual a dez!");
+		}
+	}
 
-    public void setObservacao(final String observacao) {
-        this.observacao = observacao;
-    }
+	public boolean isAprovado() {
+		return aprovado;
+	}
 
-    public UsuarioDarwin getAvaliador() {
-        return avaliador;
-    }
+	public void setAprovado(boolean aprovado) {
+		this.aprovado = aprovado;
+	}
 
-    public void setAvaliador(UsuarioDarwin avaliador) {
-        if (avaliador != null) {
-            this.avaliador = avaliador;
-        } else {
-            throw new NullPointerException("Avaliador deve ser informado!");
-        }
-    }
+	public String getObservacao() {
+		return observacao;
+	}
 
-    public EnumEstadoAvaliacao getEstado() {
-        return estado;
-    }
+	public void setObservacao(final String observacao) {
+		this.observacao = observacao;
+	}
 
-    public void setEstado(EnumEstadoAvaliacao estado) {
-        this.estado = estado;
-    }
-    
-    
+	public UsuarioDarwin getAvaliador() {
+		return avaliador;
+	}
+
+	public void setAvaliador(UsuarioDarwin avaliador) {
+		if (avaliador != null) {
+			this.avaliador = avaliador;
+		} else {
+			throw new NullPointerException("Avaliador deve ser informado!");
+		}
+	}
+
+	public EnumEstadoAvaliacao getEstado() {
+		return estado;
+	}
+
+	public void setEstado(EnumEstadoAvaliacao estado) {
+		this.estado = estado;
+	}
+
 }

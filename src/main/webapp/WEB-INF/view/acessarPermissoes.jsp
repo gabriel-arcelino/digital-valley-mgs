@@ -31,7 +31,7 @@
                 <div class="col-sm-8">
                     <nav class="breadcrumb">
                         <span class="breadcrumb-item">Você está em:</span> 
-                        <a class="breadcrumb-item" href="/Darwin/">Início</a>
+                        <a class="breadcrumb-item" href="${pageContext.request.contextPath}/">Início</a>
                         <a class="breadcrumb-item active" href="#">Acessar Permissões</a>
                     </nav>
                 <c:set var="mensagem" value="${sessionScope.mensagem}"></c:set>
@@ -48,7 +48,7 @@
                     <div class="row">
                         <h1 class="col-sm-8">Gerenciar Permissões</h1>
                     </div>
-                    <form method="GET" action="/Darwin/permissoes/busca">
+                    <form method="GET" action="${pageContext.request.contextPath}/permissoes/busca">
 		                <div class="center">
 						  <div class="input-group mb-3" style="padding-top: 5px;">
 							  <input type="text" style="text-align: center;" class="form-control" placeholder="Nome do usuário" name="nomeUsuario" aria-describedby="basic-addon2">
@@ -75,7 +75,7 @@
                        <c:forEach items="${usuarios}" var="usuario" begin="${((pagina - 1) * numMaxPorTela)}" end="${((pagina - 1) * numMaxPorTela) + (numMaxPorTela - 1)}">
                         <c:set var="permissoes" value="${usuario.permissoes}"></c:set>
                             <tr>
-                                <form method="POST" id="permissaoUser-${usuario.codUsuario}" action="/Darwin/permissoes/atualizar" enctype="multipart/form-data">
+                                <form method="POST" id="permissaoUser-${usuario.codUsuario}" action="${pageContext.request.contextPath}/permissoes/atualizar" enctype="multipart/form-data">
                                     <input type="hidden" value="${usuario.codUsuario}" name="codUsuario"/>
                                     <th  scope="row">${usuario.nome}</th>
                            <!--            <td>
@@ -98,14 +98,14 @@
                     
                     <nav aria-label="">
                         <ul class="pagination justify-content-center">
-                            <li class="page-item "${(pagina <= 1 ? "disabled" : "")}">
-                                <a class="page-link" href="/Darwin/permissoes?pag=${pagina - 1}" tabindex="-1">Anterior</a>
+                            <li class="page-item ${pagina <= 1 ? "disabled" : ""}">
+                                <a class="page-link" href="${pageContext.request.contextPath}/permissoes?pag=${pagina - 1}" tabindex="-1">Anterior</a>
                             </li>
                             <c:forEach var="i" begin="1" end="${(fn:length(usuarios)/numMaxPorTela) + (fn:length(usuarios)%numMaxPorTela == 0 ? 0 : 1)}">
-                            <li class="page-item "${(pagina == i ? "active": "")}"><a class="page-link" href="/Darwin/permissoes?pag=${i}">${i}</a></li>
+                            <li class="page-item ${pagina == i ? "active": ""}"><a class="page-link" href="${pageContext.request.contextPath}/permissoes?pag=${i}">${i}</a></li>
                             </c:forEach>
-                            <li class="page-item  "${(pagina >= ((fn:length(usuarios))/numMaxPorTela) ? "disabled" : "")}">
-                                <a class="page-link" href="/Darwin/permissoes?pag=${pagina + 1}">Próximo</a>
+                            <li class="page-item ${pagina >= fn:length(usuarios)/numMaxPorTela ? "disabled" : ""}">
+                                <a class="page-link" href="${pageContext.request.contextPath}/permissoes?pag=${pagina + 1}">Próximo</a>
                             </li>
                         </ul>
                     </nav>

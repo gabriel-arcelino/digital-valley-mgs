@@ -1,10 +1,4 @@
-/nbproject/private/
-/dist/
-/nbproject/
 /target/
-/.metadata/
-/.settings/
-.classpath
+.settings/
 .project
-/bin/
-/src/main/resources/.env
+.classpath

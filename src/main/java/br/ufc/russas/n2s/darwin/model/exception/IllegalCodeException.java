@@ -13,7 +13,9 @@ import java.io.Serializable;
  */
 public class IllegalCodeException extends IllegalArgumentException implements Serializable{
 
-    public IllegalCodeException() {
+	private static final long serialVersionUID = 1L;
+
+	public IllegalCodeException() {
 
     }
 

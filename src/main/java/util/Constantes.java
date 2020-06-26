@@ -16,11 +16,12 @@ public class Constantes {
 	private static String DATABASE_CONF_DIR;
 	private static String PRE_URL;
 	private static String LOGO_UFC;
-	private static String LOGO_UFC_ICON;
 	private static String LOGO_DARWIN;
 	private static String LOGO_N2S;
 	private static String DOCUMENTS_DIR;
 	private static String TEMP_DIR;
+	private static String SIZE_FILE;
+	
 	private Constantes() {
 		//
 	}
@@ -38,11 +39,11 @@ public class Constantes {
 		SESSION_MSG = dotEnv.get("SESSION_MSG");
 		PRE_URL = dotEnv.get("PRE_URL");
 		LOGO_UFC = dotEnv.get("LOGO_UFC");
-		LOGO_UFC_ICON = dotEnv.get("LOGO_UFC_ICON");
 		LOGO_DARWIN = dotEnv.get("LOGO_DARWIN");
 		LOGO_N2S = dotEnv.get("LOGO_N2S");
 		DOCUMENTS_DIR = dotEnv.get("DOCUMENTS_DIR");
 		TEMP_DIR = dotEnv.get("TEMP_DIR");
+		SIZE_FILE = dotEnv.get("SIZE_FILE");
 	}
 
 	/**
@@ -121,10 +122,6 @@ public class Constantes {
 		return LOGO_UFC;
 	}
 	
-	public static String getLOGO_UFC_ICON() {
-		return LOGO_UFC_ICON;
-	}
-	
 	public static String getLOGO_DARWIN() {
 		return LOGO_DARWIN;
 	}
@@ -144,6 +141,10 @@ public class Constantes {
 	 */
 	public static String getTemp() {
 		return TEMP_DIR;
+	}
+	
+	public static String getSizeFile(){
+		return SIZE_FILE;
 	}
 	
 }

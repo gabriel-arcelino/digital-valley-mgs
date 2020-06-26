@@ -5,8 +5,6 @@
  */
 package br.ufc.russas.n2s.darwin.model;
 
-import javax.persistence.Embeddable;
-
 /**
  *
  * @author Lavínia Matoso

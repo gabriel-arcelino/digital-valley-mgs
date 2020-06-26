@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufc.russas.n2s.darwin.beans;
 
 import br.ufc.russas.n2s.darwin.model.EnumPermissao;
@@ -17,9 +12,6 @@ import java.util.List;
  */
 public class UsuarioBeans implements Beans, Serializable{
     
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 7618752980671884090L;
 	
 	private long codUsuario;

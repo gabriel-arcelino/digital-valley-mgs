@@ -29,8 +29,8 @@
                 <div class="col-sm-8">
                     <nav class="breadcrumb">
                         <span class="breadcrumb-item">Você está em:</span> 
-                        <a class="breadcrumb-item" href="/Darwin/">Início</a>
-                        <a class="breadcrumb-item" href="/Darwin/selecao/${selecao.codSelecao}">${selecao.titulo}</a>
+                        <a class="breadcrumb-item" href="${pageContext.request.contextPath}/">Início</a>
+                        <a class="breadcrumb-item" href="${pageContext.request.contextPath}/selecao/${selecao.codSelecao}">${selecao.titulo}</a>
                         <a class="breadcrumb-item" href="${etapa.codEtapa}">${etapa.titulo}</a>
                         <a class="breadcrumb-item active" href="#">Resultado</a>
                     </nav>
@@ -83,7 +83,7 @@
                                                     <td>${participante[2]}</td>
                                                 </c:if>
                                                 <c:if test="${not empty etapa.recurso and isResponsavel}">
-							                    	<td> <a href="/Darwin/recursoEtapa/${etapa.codEtapa}/${participante[0].codParticipante}" class="btn btn-primary btn-sm" style="height: 33px;margin-left: 30px;margin-top: -4px;" >
+							                    	<td> <a href="${pageContext.request.contextPath}/recursoEtapa/${etapa.codEtapa}/${participante[0].codParticipante}" class="btn btn-primary btn-sm" style="height: 33px;margin-left: 30px;margin-top: -4px;" >
 							                        	<span>Recurso</span>
 							                    	</a> </td>
 							                    </c:if>

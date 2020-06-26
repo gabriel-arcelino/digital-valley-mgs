@@ -17,14 +17,13 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import sun.misc.BASE64Encoder;
 
 /**
  *
  * @author Wallison
  */
+@SuppressWarnings("restriction")
 public class FileManipulation {
     
     public static String fileToString(File file) {
@@ -49,11 +48,13 @@ public class FileManipulation {
         File file = File.createTempFile("index", ext);
         OutputStream outStream = new FileOutputStream(file);
         outStream.write(buffer);
+        outStream.close();
         return file;
     }
     
-    public static InputStream getStreamFromURL(String uri) throws MalformedURLException, IOException{
-        BASE64Encoder enc = new sun.misc.BASE64Encoder();
+
+	public static InputStream getStreamFromURL(String uri) throws MalformedURLException, IOException{
+		BASE64Encoder enc = new sun.misc.BASE64Encoder();
         URL url = new URL(uri);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.addRequestProperty("Request-Method", "GET");

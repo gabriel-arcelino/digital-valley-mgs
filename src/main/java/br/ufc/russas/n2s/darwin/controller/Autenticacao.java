@@ -1,11 +1,5 @@
 package br.ufc.russas.n2s.darwin.controller;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -18,9 +12,11 @@ import dao.UsuarioDAO;
 import model.Usuario;
 import dao.DAOFactory;
 import util.Facade;
-import util.Constantes;
 
 public class Autenticacao extends HttpServlet{
+	
+	private static final long serialVersionUID = 1L;
+
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
             if(request.getParameter("json")!=null){
                 String json = request.getParameter("json");

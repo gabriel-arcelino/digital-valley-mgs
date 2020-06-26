@@ -1,19 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufc.russas.n2s.darwin.service;
 
 import br.ufc.russas.n2s.darwin.beans.EtapaBeans;
-import br.ufc.russas.n2s.darwin.beans.ParticipanteBeans;
 import br.ufc.russas.n2s.darwin.beans.ResultadoParticipanteSelecaoBeans;
 import br.ufc.russas.n2s.darwin.beans.SelecaoBeans;
 import br.ufc.russas.n2s.darwin.beans.UsuarioBeans;
 import br.ufc.russas.n2s.darwin.dao.EtapaDAOIfc;
 import br.ufc.russas.n2s.darwin.dao.SelecaoDAOIfc;
+import br.ufc.russas.n2s.darwin.model.EnumEstadoEtapa;
 import br.ufc.russas.n2s.darwin.model.EnumEstadoSelecao;
-import br.ufc.russas.n2s.darwin.model.EnumPermissao;
 import br.ufc.russas.n2s.darwin.model.Etapa;
 import br.ufc.russas.n2s.darwin.model.EtapaPredicates;
 import br.ufc.russas.n2s.darwin.model.Participante;
@@ -21,13 +15,11 @@ import br.ufc.russas.n2s.darwin.model.ResultadoParticipanteSelecao;
 import br.ufc.russas.n2s.darwin.model.Selecao;
 import br.ufc.russas.n2s.darwin.model.SelecaoProxy;
 import br.ufc.russas.n2s.darwin.model.UsuarioDarwin;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -140,27 +132,47 @@ public class SelecaoServiceImpl implements SelecaoServiceIfc {
     @Transactional
     public List<SelecaoBeans> listaSelecoesIgnorandoNotas(Selecao selecao) {
         selecao.setDivulgada(true);
-       // selecao.setDivulgadoResultado(false);
         selecao.setDeletada(false);
         List<SelecaoBeans> selecoes = Collections.synchronizedList(new ArrayList<SelecaoBeans>());
         List<Selecao> resultado = this.getSelecaoDAOIfc().listaSelecoesIgnorandoNotas(selecao);
         System.out.println(resultado.size());
         for (Selecao s : resultado) {
-        	
             selecoes.add((SelecaoBeans) new SelecaoBeans().toBeans(s));
         }
         return selecoes;
     }
-    
-    
-    
 
     @Override
     @Transactional(readOnly = true)
     public SelecaoBeans getSelecao(long codSelecao) {
-       Selecao selecao = new Selecao();
-       selecao.setCodSelecao(codSelecao);
-       return (SelecaoBeans) new SelecaoBeans().toBeans(this.getSelecaoDAOIfc().getSelecao(selecao));
+    	Selecao selecao = new Selecao();
+    	selecao.setCodSelecao(codSelecao);
+    	
+    	selecao = this.getSelecaoDAOIfc().getSelecao(selecao);
+   
+       	EnumEstadoSelecao novoEstado = selecao.getEstado().execute(selecao);
+		if(novoEstado != selecao.getEstado()){
+			this.atualizaEstado(selecao, novoEstado);
+		}
+		
+		if(selecao.getInscricao() != null){
+			EnumEstadoEtapa estadoEtapaIns = selecao.getInscricao().getEstado().execute(selecao.getInscricao());
+			if(estadoEtapaIns != selecao.getInscricao().getEstado()){
+				selecao.getInscricao().setEstado(estadoEtapaIns);
+				etapaDAOIfc.atualizaEtapa(selecao.getInscricao());
+			}
+		}
+		
+		List<Etapa> etapas = selecao.getEtapas();
+		for(Etapa e : etapas){
+			EnumEstadoEtapa estadoEtapa = e.getEstado().execute(e);
+			if(e.getEstado() != estadoEtapa){
+				e.setEstado(estadoEtapa);
+				etapaDAOIfc.atualizaEtapa(e);
+			}
+		}
+		
+		return (SelecaoBeans) new SelecaoBeans().toBeans(selecao);
     }
 
     @Override
@@ -173,32 +185,16 @@ public class SelecaoServiceImpl implements SelecaoServiceIfc {
         Selecao selecao = new Selecao();
         selecao.setDeletada(false);
         selecao.setExibirNotas(true);
-        //selecao.setDivulgada(false);
         UsuarioDarwin user = (UsuarioDarwin) usuario.toBusiness();
         List<SelecaoBeans> selecoes = Collections.synchronizedList(new ArrayList<SelecaoBeans>());
-       // List<Selecao> resultadoNaoDivulgadas = this.getSelecaoDAOIfc().listaSelecoes(selecao);
         List<Selecao> resultadoNaoDivulgadas = this.getSelecaoDAOIfc().buscaTodasPorCriteria(false);
-       // selecao.setDivulgada(true);
         List<Selecao> resultadoDivulgadas = this.getSelecaoDAOIfc().buscaTodasPorCriteria(true);
-       // List<SelecaoBeans> resultadoDivulgadas = this.listaTodasSelecoes();
-        
+
         for (Selecao s : resultadoNaoDivulgadas) {
             if (s.getResponsaveis().contains(user)) {
                 selecoes.add((SelecaoBeans) new SelecaoBeans().toBeans(s));
             } 
         }
-        /*for (SelecaoBeans s : resultadoDivulgadas) {
-        	boolean isParticipante = false;
-        	for (ParticipanteBeans p : s.getInscricao().getParticipantes()) {
-        		if (p.getCandidato().getCodUsuario() == usuario.getCodUsuario()) {
-        			isParticipante = true;
-        			break;
-        		}
-        	}
-            if (s.getResponsaveis().contains(usuario) || isParticipante) {
-                selecoes.add(s);
-            }
-        }*/
         
         UsuarioDarwin u = (UsuarioDarwin) usuario.toBusiness();
         for (Selecao s : resultadoDivulgadas) {
@@ -213,7 +209,6 @@ public class SelecaoServiceImpl implements SelecaoServiceIfc {
             	selecoes.add((SelecaoBeans) new SelecaoBeans().toBeans(s));
             }
         }
-       
         return this.ordenaSelecoesPorData(selecoes);
     }
     
@@ -222,28 +217,14 @@ public class SelecaoServiceImpl implements SelecaoServiceIfc {
         Selecao selecao = new Selecao();
         selecao.setDeletada(false);
         selecao.setDivulgada(false);
-       // UsuarioDarwin user = (UsuarioDarwin) usuario.toBusiness();
         List<SelecaoBeans> selecoes = Collections.synchronizedList(new ArrayList<SelecaoBeans>());
-       // List<Selecao> resultadoNaoDivulgadas = this.getSelecaoDAOIfc().listaSelecoesIgnorandoNotas(selecao);//erro
         selecao.setDivulgada(true);
-      //  List<SelecaoBeans> resultadoDivulgadas = this.listaSelecoesIgnorandoNotas(selecao);
-       // List<Selecao> resultadoTodas =  this.getSelecaoDAOIfc().listaSelecoesIgnorandoBooleanos();
         List<Selecao> resultadoTodas =  this.getSelecaoDAOIfc().buscaTodasPorCriteria();
         
         
         for (int i=0;i<resultadoTodas.size();i++) {
             selecoes.add((SelecaoBeans) new SelecaoBeans().toBeans(resultadoTodas.get(i)));
         }
-        
-      //  List<SelecaoBeans> resultadoDivulgadas = this.listaTodasSelecoes();
-     /*   for (Selecao s : resultadoNaoDivulgadas) {
-                selecoes.add((SelecaoBeans) new SelecaoBeans().toBeans(s));
-        }
-        
-        for (SelecaoBeans s : resultadoDivulgadas) {
-        	selecoes.add(s);
-        }
-        */
         return this.ordenaSelecoesPorData(selecoes);
     }
     
@@ -325,9 +306,7 @@ public class SelecaoServiceImpl implements SelecaoServiceIfc {
 	@Override
 	public List<EtapaBeans> getEtapasNota(SelecaoBeans selecao) {
 		Selecao s = (Selecao) selecao.toBusiness();
-		List<Etapa> porNotas = s.getEtapas().stream()
-                .filter( EtapaPredicates.isNota())
-                .collect(Collectors.<Etapa>toList());
+		List<Etapa> porNotas = s.getEtapas().stream().filter( EtapaPredicates.isNota()).collect(Collectors.<Etapa>toList());
 		List<EtapaBeans> etapas = Collections.synchronizedList(new ArrayList<EtapaBeans>());
 		for (int i = 0;i < porNotas.size();i++) {
 			etapas.add((EtapaBeans) new EtapaBeans().toBeans(porNotas.get(i)));
@@ -344,7 +323,6 @@ public class SelecaoServiceImpl implements SelecaoServiceIfc {
 				etapas.set(i+1, aux);
 			}
 		}
-		
 		return etapas;
 	}
 	
@@ -359,16 +337,124 @@ public class SelecaoServiceImpl implements SelecaoServiceIfc {
 		return rb;
 	}
 	
-	
 	@Override
-	public List<SelecaoBeans> BuscaSelecoesPorNome(String titulo) {
-	    List<Selecao> result = this.getSelecaoDAOIfc().BuscaSelecoesPorNome(titulo);
+	public List<SelecaoBeans> listaSelecoes(boolean isAdm, String categoria, EnumEstadoSelecao estado, int inicio, int qtd){
+		List<Selecao> result = this.getSelecaoDAOIfc().listaSelecoes(isAdm, categoria, estado, inicio, qtd);
 	    List<SelecaoBeans> selecoes = Collections.synchronizedList(new ArrayList<SelecaoBeans>());
 	    for (Selecao s : result) {
-	    	if (s.isDivulgada() || this.usuario.getPermissoes().contains(EnumPermissao.ADMINISTRADOR) || s.getResponsaveis().contains((UsuarioDarwin) this.usuario.toBusiness()) ) {
-		    	selecoes.add((SelecaoBeans) new SelecaoBeans().toBeans(s));
+	    	
+	    	EnumEstadoSelecao novoEstado = s.getEstado().execute(s);
+	    	if(novoEstado != s.getEstado()){
+	    		this.atualizaEstado(s, novoEstado);
 	    	}
+	    	Etapa etapa = s.getInscricao();
+	    	if(etapa != null) {
+	    		EnumEstadoEtapa estadoEtapaIns = s.getInscricao().getEstado().execute(s.getInscricao());	
+		    	if(estadoEtapaIns != s.getInscricao().getEstado()){
+		    		s.getInscricao().setEstado(estadoEtapaIns);
+		    		etapaDAOIfc.atualizaEtapa(s.getInscricao());
+		    	}
+	    	}
+	    	List<Etapa> etapas = s.getEtapas();
+	    	for(Etapa e : etapas){
+	    		EnumEstadoEtapa estadoEtapa = e.getEstado().execute(e);
+	    		if(e.getEstado() != estadoEtapa){
+	    			e.setEstado(estadoEtapa);
+	    			etapaDAOIfc.atualizaEtapa(e);
+	    		}
+	    	}
+
+	    	selecoes.add((SelecaoBeans) new SelecaoBeans().toBeans(s));
 	    }
 	    return selecoes;
+	}
+	
+	@Override
+    public Long getQuantidade(boolean isAdm, String categoria, EnumEstadoSelecao estado){
+		return this.getSelecaoDAOIfc().getQuantidade(isAdm, categoria, estado);
+	}
+	
+	@Override
+    public List<SelecaoBeans> buscarSelecoesPorNome(boolean isAdm, String titulo, int inicio, int qtd){
+    	List<Selecao> result = this.getSelecaoDAOIfc().buscarSelecoesPorNome(isAdm, titulo, inicio, qtd);
+	    List<SelecaoBeans> selecoes = Collections.synchronizedList(new ArrayList<SelecaoBeans>());
+	    for (Selecao s : result) {
+	    	
+	    	EnumEstadoSelecao novoEstado = s.getEstado().execute(s);
+	    	if(novoEstado != s.getEstado()){
+	    		this.atualizaEstado(s, novoEstado);
+	    	}
+	    	
+	    	Etapa etapa = s.getInscricao();
+	    	if(etapa != null) {
+	    		EnumEstadoEtapa estadoEtapaIns = s.getInscricao().getEstado().execute(s.getInscricao());	
+		    	if(estadoEtapaIns != s.getInscricao().getEstado()){
+		    		s.getInscricao().setEstado(estadoEtapaIns);
+		    		etapaDAOIfc.atualizaEtapa(s.getInscricao());
+		    	}
+	    	}
+	    	List<Etapa> etapas = s.getEtapas();
+	    	for(Etapa e : etapas){
+	    		EnumEstadoEtapa estadoEtapa = e.getEstado().execute(e);
+	    		if(e.getEstado() != estadoEtapa){
+	    			e.setEstado(estadoEtapa);
+	    			etapaDAOIfc.atualizaEtapa(e);
+	    		}
+	    	}
+
+	    	selecoes.add((SelecaoBeans) new SelecaoBeans().toBeans(s));
+	    }
+	    return selecoes;
+    }
+	
+	@Override
+	public Long getQuantidadePorNome(boolean isAdm, String titulo){
+		return this.getSelecaoDAOIfc().getQuantidadePorNome(isAdm, titulo);
+	}
+
+	@Override
+	public List<SelecaoBeans> buscarSelecoesAssociada(UsuarioBeans usuario, int inicio, int qtd) {
+		List<Selecao> result = this.getSelecaoDAOIfc().buscarSelecoesAssociada(usuario.getCodUsuario(), inicio, qtd); 
+	    List<SelecaoBeans> selecoes = Collections.synchronizedList(new ArrayList<SelecaoBeans>());
+	    for (Selecao s : result) {
+	    	
+	    	EnumEstadoSelecao novoEstado = s.getEstado().execute(s);
+	    	if(novoEstado != s.getEstado()){
+	    		this.atualizaEstado(s, novoEstado);
+	    	}
+	    	
+	    	if(s.getInscricao() != null){
+	    		EnumEstadoEtapa estadoEtapaIns = s.getInscricao().getEstado().execute(s.getInscricao());
+		    	if(estadoEtapaIns != s.getInscricao().getEstado()){
+		    		s.getInscricao().setEstado(estadoEtapaIns);
+		    		etapaDAOIfc.atualizaEtapa(s.getInscricao());
+		    	}
+	    	}
+	    	
+	    	
+	    	List<Etapa> etapas = s.getEtapas();
+	    	for(Etapa e : etapas){
+	    		EnumEstadoEtapa estadoEtapa = e.getEstado().execute(e);
+	    		if(e.getEstado() != estadoEtapa){
+	    			e.setEstado(estadoEtapa);
+	    			etapaDAOIfc.atualizaEtapa(e);
+	    		}
+	    	}
+
+	    	selecoes.add((SelecaoBeans) new SelecaoBeans().toBeans(s));
+	    }
+	    return selecoes;
+	}
+
+	@Override
+	public Long getQuantidadeAssociada(UsuarioBeans usuario) {
+		Integer qtd = this.getSelecaoDAOIfc().getListaSelecoesAssociada(usuario.getCodUsuario()).size();
+		return qtd.longValue();
+	}
+
+	@Override
+	public SelecaoBeans getSelecaoDaEtapa(Long codEtapa) {
+		Selecao s = this.getSelecaoDAOIfc().getSelecao(codEtapa);
+		return (SelecaoBeans) new SelecaoBeans().toBeans(s);
 	}
 }

@@ -30,7 +30,7 @@ public class SelecaoProxy extends Selecao{
     }
     
     public Etapa adicionaEtapa(Selecao selecao, Etapa etapa) throws IllegalAccessException {
-        if (this.getUsuario().getPermissoes().contains(EnumPermissao.RESPONSAVEL) && selecao.getResponsaveis().contains(this.getUsuario())) {
+        if ((this.getUsuario().getPermissoes().contains(EnumPermissao.RESPONSAVEL) && selecao.getResponsaveis().contains(this.getUsuario())) || this.getUsuario().getPermissoes().contains(EnumPermissao.ADMINISTRADOR)) {
             return selecao.adicionaEtapa(etapa);
         } else {
             throw new IllegalAccessException("Você não é o responsável por esta seleção: <b> ".concat(selecao.getTitulo()).concat("</b>"));
@@ -38,7 +38,7 @@ public class SelecaoProxy extends Selecao{
     }
     
     public Etapa atualizaEtapa(Selecao selecao, Etapa etapa) throws IllegalAccessException {
-        if (this.getUsuario().getPermissoes().contains(EnumPermissao.RESPONSAVEL) && selecao.getResponsaveis().contains(this.getUsuario())) {
+        if ((this.getUsuario().getPermissoes().contains(EnumPermissao.RESPONSAVEL) && selecao.getResponsaveis().contains(this.getUsuario())) || this.getUsuario().getPermissoes().contains(EnumPermissao.ADMINISTRADOR)) {
             return selecao.atualizaEtapa(etapa);
         } else {
             throw new IllegalAccessException("Você não é o responsável por esta seleção: <b> ".concat(selecao.getTitulo()).concat("</b>"));
@@ -62,7 +62,7 @@ public class SelecaoProxy extends Selecao{
     }
     
     public void adicionaResponsavel(Selecao selecao, UsuarioDarwin responsavel) throws IllegalAccessException {
-        if (getUsuario().getPermissoes().contains(EnumPermissao.RESPONSAVEL) && selecao.isResponsavel(getUsuario())) {
+        if ((getUsuario().getPermissoes().contains(EnumPermissao.RESPONSAVEL) && selecao.isResponsavel(getUsuario())) || this.getUsuario().getPermissoes().contains(EnumPermissao.ADMINISTRADOR)) {
             selecao.adicionaResponsavel(responsavel);
         } else {
             throw new IllegalAccessException("Você não é o responsável por esta seleção: <b> ".concat(selecao.getTitulo()).concat("</b>"));
@@ -70,7 +70,7 @@ public class SelecaoProxy extends Selecao{
     }
     
     public void removeResponsavel(Selecao selecao, UsuarioDarwin responsavel) throws IllegalAccessException {
-        if (getUsuario().getPermissoes().contains(EnumPermissao.RESPONSAVEL) && selecao.isResponsavel(getUsuario())) {
+        if ((getUsuario().getPermissoes().contains(EnumPermissao.RESPONSAVEL) && selecao.isResponsavel(getUsuario())) || this.getUsuario().getPermissoes().contains(EnumPermissao.ADMINISTRADOR)) {
             selecao.removeResponsavel(responsavel);
         } else {
             throw new IllegalAccessException("Você não é o responsável por esta seleção: <b> ".concat(selecao.getTitulo()).concat("</b>"));
@@ -78,7 +78,7 @@ public class SelecaoProxy extends Selecao{
     }
     
     public void removeEtapa(Selecao selecao, Etapa etapa) throws IllegalAccessException {
-        if (getUsuario().getPermissoes().contains(EnumPermissao.RESPONSAVEL) && selecao.isResponsavel(getUsuario())) {
+        if ((getUsuario().getPermissoes().contains(EnumPermissao.RESPONSAVEL) && selecao.isResponsavel(getUsuario())) || this.getUsuario().getPermissoes().contains(EnumPermissao.ADMINISTRADOR)) {
             selecao.removeEtapa(etapa);
         } else {
             throw new IllegalAccessException("Você não é o responsável por esta seleção: <b> ".concat(selecao.getTitulo()).concat("</b>"));

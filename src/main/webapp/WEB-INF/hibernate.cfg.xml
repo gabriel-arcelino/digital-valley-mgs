@@ -45,12 +45,6 @@ Contributor(s):
     <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
     <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
     <property name="hibernate.query.factory_class">org.hibernate.hql.internal.classic.ClassicQueryTranslatorFactory</property>
-       <property name="hibernate.connection.url">jdbc:postgresql://200.129.62.41:5432/guardiaodb</property>
- <!-- <property name="hibernate.connection.url">jdbc:postgresql://192.169.1.2:5432/darwin-emproducao</property>  --> 
-   	<property name="hibernate.connection.username">darwin</property>
-    <property name="hibernate.connection.password">n2s-darwin</property> 
-  <!--   <property name="hibernate.connection.username">n2s</property>
-    <property name="hibernate.connection.password">N2S@UFC</property> -->
     <property name="hibernate.c3p0.min_size">5</property>
     <property name="hibernate.c3p0.max_size">20</property>
     <property name="hibernate.c3p0.timeout">1800</property>

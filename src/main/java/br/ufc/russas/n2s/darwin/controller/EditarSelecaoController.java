@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufc.russas.n2s.darwin.controller;
 
 import java.io.File;
@@ -14,11 +9,13 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -49,7 +46,7 @@ import br.ufc.russas.n2s.darwin.model.FileManipulation;
 import br.ufc.russas.n2s.darwin.model.Log;
 import br.ufc.russas.n2s.darwin.model.Selecao;
 import br.ufc.russas.n2s.darwin.model.UsuarioDarwin;
-import br.ufc.russas.n2s.darwin.service.DocumentacaoServiceIfc;
+import br.ufc.russas.n2s.darwin.model.exception.AvaliadorException;
 import br.ufc.russas.n2s.darwin.service.LogServiceIfc;
 import br.ufc.russas.n2s.darwin.service.SelecaoServiceIfc;
 import br.ufc.russas.n2s.darwin.service.UsuarioServiceIfc;
@@ -66,7 +63,6 @@ public class EditarSelecaoController {
     private SelecaoServiceIfc selecaoServiceIfc;
     private UsuarioServiceIfc usuarioServiceIfc;
     private LogServiceIfc logServiceIfc;
-    private DocumentacaoServiceIfc documentacaoServiceIfc;
     
     public SelecaoServiceIfc getSelecaoServiceIfc() {
         return selecaoServiceIfc;
@@ -154,10 +150,10 @@ public class EditarSelecaoController {
                 
                 selecaoBeans.getEdital().setArquivo(temp);
                 selecaoBeans.getEdital().setData(LocalDateTime.now());
+                output.close();
             }
             
             if (nomeAnexos != null && linkAnexos != null) {
-            	ArrayList<ArquivoBeans> anexos = new ArrayList<>();
                 for (int i=0; i < nomeAnexos.length; i++) {
                     ArquivoBeans anexo = new ArquivoBeans();
                     anexo.setTitulo(nomeAnexos[i]);
@@ -172,6 +168,7 @@ public class EditarSelecaoController {
                     anexo.setArquivo(temp);
                     anexo.setData(LocalDateTime.now());
                     selecaoBeans.getAnexos().add(anexo);
+                    output.close();
                 }
             }
             
@@ -190,6 +187,7 @@ public class EditarSelecaoController {
                     aditivo.setArquivo(temp);
                     aditivo.setData(LocalDateTime.now());
                     selecaoBeans.getAditivos().add(aditivo);
+                    output.close();
                 }
             }
 
@@ -211,7 +209,6 @@ public class EditarSelecaoController {
             UsuarioBeans usuario = (UsuarioBeans) session.getAttribute("usuarioDarwin");
             this.getSelecaoServiceIfc().setUsuario(usuario);
             selecaoBeans = this.getSelecaoServiceIfc().atualizaSelecao(selecaoBeans);
-           // EtapaBeans etapaAtual = this.getSelecaoServiceIfc().getEtapaAtual(selecaoBeans);
             session.setAttribute("selecao", selecaoBeans);
             this.getLogServiceIfc().adicionaLog(new Log(LocalDate.now(),(UsuarioDarwin)usuario.toBusiness(), (Selecao) selecaoBeans.toBusiness(), "O(A) usuario(a) "+ usuario.getNome()+" editou a seleção "+selecao.getTitulo()+" em "+LocalDate.now()+"."));
             session.setAttribute("mensagem", "Seleção atualizada com sucesso!");
@@ -243,15 +240,30 @@ public class EditarSelecaoController {
 	                session.setAttribute("status", "warning");
 	        		return "redirect:/selecao/" + selecao.getCodSelecao();
 	        	} else {
-	        		if (selecao.getInscricao().getAvaliadores().size() > 0) {
-		        		for (EtapaBeans eb : selecao.getEtapas()) {
-		        			if (eb.getAvaliadores().size() <= 0) {
-		        				throw new Exception("Não foi possível divulgar a seleção, verfique se todas as etapas possuem avaliadores.");
-		        			} 	
-		        		}
-	        		} else {
-        				throw new Exception("Não foi possível divulgar a seleção, verfique se todas as etapas possuem avaliadores.");
+	        		List<List<String>> etapasSemAvaliadores = new ArrayList<>();
+	        		
+	        		if (selecao.getInscricao().getAvaliadores().size() == 0) {
+	        			etapasSemAvaliadores.add(Arrays.asList(selecao.getInscricao().getTitulo(), Long.toString(selecao.getInscricao().getCodEtapa())));
 	        		}
+	        		for (EtapaBeans eb : selecao.getEtapas()) {
+	        			if (eb.getAvaliadores().size() <= 0) {
+	        				etapasSemAvaliadores.add(Arrays.asList(eb.getTitulo(), Long.toString(eb.getCodEtapa())));
+	        			} 	
+	        		}
+	        		
+	        		if(!etapasSemAvaliadores.isEmpty()) {
+	        			String msg = "Não foi possível divulgar a seleção, verifique a(s) etapa(s): ";
+	        			for(int i = 0; i < etapasSemAvaliadores.size(); i++) {
+	        				if(i != etapasSemAvaliadores.size()-1) {
+	        					msg += etapasSemAvaliadores.get(i).get(0) + ", ";
+	        				} else {
+	        					msg += etapasSemAvaliadores.get(i).get(0) + ".";
+	        				}
+	        			}
+	        			
+	        			throw new AvaliadorException(msg, etapasSemAvaliadores);
+	        		}
+	        		
 		            selecaoServiceIfc.setUsuario(usuario);
 		            selecao.setDivulgada(true);
 		            selecao = selecaoServiceIfc.atualizaSelecao(selecao);
@@ -284,36 +296,18 @@ public class EditarSelecaoController {
 	            session.setAttribute("mensagem", e.getMessage());
                 session.setAttribute("status", "warning");
 	            return "redirect:/selecao/" + selecao.getCodSelecao();
+	        }
+            catch(AvaliadorException e) {
+	            session.setAttribute("mensagem", e.getMsg());
+	            session.setAttribute("etapasComErro", e.getEtapasSemAvaliadores().stream().map(etapa -> etapa.get(1)).collect(Collectors.toList()));
+                session.setAttribute("status", "warning");
+	            return "redirect:/selecao/" + selecao.getCodSelecao();
 	        } catch(Exception e) {
 	            session.setAttribute("mensagem", e.getMessage());
                 session.setAttribute("status", "warning");
-	             return "redirect:/selecao/" + selecao.getCodSelecao();
+	            return "redirect:/selecao/" + selecao.getCodSelecao();
 	        }
         } else {return "error/404";}
     }
-    
-    /*
-    @RequestMapping(value = "/remove/{codSelecao}", method = RequestMethod.GET)
-    public String removeSelecao(@PathVariable long codSelecao, Model model, HttpServletRequest request) {
-    	 HttpSession session = request.getSession();
-    	 UsuarioBeans usuario = (UsuarioBeans) session.getAttribute("usuarioDarwin");
-    	 try {
-	    	 if (usuario != null) {
-	    		 SelecaoBeans selecao = selecaoServiceIfc.getSelecao(codSelecao);
-	    		 selecaoServiceIfc.setUsuario(usuario);
-	    		 selecaoServiceIfc.removeSelecao(selecao);
-	    		 session.setAttribute("mensagem", "Seleção removida com sucesso!");
-	             session.setAttribute("status", "success");
-	    	 }
-    	 } catch (Exception e) {
-    		 e.printStackTrace();
-    		 session.setAttribute("mensagem", e.getMessage());
-             session.setAttribute("status", "danger");
-             return "minhas-selecoes";
-		}
-    	return "minhas-selecoes";
-    }
-    */
 
-    
 }

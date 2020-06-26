@@ -19,20 +19,20 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
             <c:set var="permissoes" value="${sessionScope.usuarioDarwin.permissoes}"></c:set>
-            <a class="nav-item nav-link" href="<%=Constantes.getAppUrl()%>/">Início</a>
+            <a class="nav-item nav-link" href="${pageContext.request.contextPath}/">Início</a>
             <a class="nav-item nav-link" href="<%=Constantes.getAppGuardiaoUrl()%>">Guardião</a>
-            <a class="nav-item nav-link" href="<%=Constantes.getAppUrl() %>/minhas_Selecoes">Minhas seleções</a>
+            <a class="nav-item nav-link" href="${pageContext.request.contextPath}/minhas_Selecoes">Minhas seleções</a>
             <c:if test="${fn:contains(permissoes, 'RESPONSAVEL') or fn:contains(permissoes, 'ADMINISTRADOR')}">
             <div class="btn-group">
                 <a href="" class="nav-item nav-link " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Administração
                 </a>
                 <div class="dropdown-menu">
-                    <a class="dropdown-item" href="<%=Constantes.getAppUrl() %>/cadastrarSelecao">Cadastrar Seleção</a>
+                    <a class="dropdown-item" href="${pageContext.request.contextPath}/cadastrarSelecao">Cadastrar Seleção</a>
                     
                     <c:if test="${fn:contains(permissoes, 'ADMINISTRADOR')}">
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="<%=Constantes.getAppUrl() %>/permissoes">Gerenciar permissões</a>
+                    <a class="dropdown-item" href="${pageContext.request.contextPath}/permissoes">Gerenciar permissões</a>
                     </c:if>
                 </div>
             </div>
@@ -45,12 +45,12 @@
 		</button>
 		<div class="dropdown-menu">
 		<c:if test="${sessionScope.usuarioDarwin.recebeEmail}">
-	     <a class="dropdown-item" href="<%=Constantes.getAppUrl() %>/usuario/recebeEmail">Deixar de receber notificações</a>
+	     <a class="dropdown-item" href="${pageContext.request.contextPath}/usuario/recebeEmail">Deixar de receber notificações</a>
 	     </c:if>
 	     <c:if test="${not sessionScope.usuarioDarwin.recebeEmail}">
-	     <a class="dropdown-item" href="<%=Constantes.getAppUrl() %>/usuario/recebeEmail">Receber notificações</a>
+	     <a class="dropdown-item" href="${pageContext.request.contextPath}/usuario/recebeEmail">Receber notificações</a>
 	     </c:if>
-		  <a class="dropdown-item" href="<%=Constantes.getAppUrl() %>/sair">Sair</a>
+		  <a class="dropdown-item" href="${pageContext.request.contextPath}/sair">Sair</a>
 	</div>
 </div>
 </nav>         

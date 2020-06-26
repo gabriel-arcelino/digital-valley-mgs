@@ -28,7 +28,8 @@ import br.ufc.russas.n2s.darwin.beans.UsuarioBeans;
 import util.Constantes;
 
 
-public class Email implements Runnable{
+public class Email implements Runnable {
+	
 	private String from = "n2s.mensageiro@gmail.com";
 	private String pass = "n2s@m@1ls3rv1c3";
 	private Session session;
@@ -347,7 +348,7 @@ public class Email implements Runnable{
 	                 multipart.addBodyPart(messageBodyPart);
 	            messageBodyPart = new MimeBodyPart();
 	            DataSource logoUFC = new FileDataSource(
-		                 Constantes.getLOGO_UFC_ICON());
+		                 Constantes.getLOGO_UFC());
 		              messageBodyPart.setDataHandler(new DataHandler(logoUFC));
 		              messageBodyPart.addHeader("Content-ID", "<logoUFC>");
 	
@@ -563,7 +564,7 @@ public class Email implements Runnable{
 	                 multipart.addBodyPart(messageBodyPart);
 	            messageBodyPart = new MimeBodyPart();
 	            DataSource logoUFC = new FileDataSource(
-		                 Constantes.getLOGO_UFC_ICON());
+		                 Constantes.getLOGO_UFC());
 		              messageBodyPart.setDataHandler(new DataHandler(logoUFC));
 		              messageBodyPart.addHeader("Content-ID", "<logoUFC>");
 	
@@ -766,7 +767,7 @@ public class Email implements Runnable{
 	                 multipart.addBodyPart(messageBodyPart);
 	            messageBodyPart = new MimeBodyPart();
 	            DataSource logoUFC = new FileDataSource(
-		                 Constantes.getLOGO_UFC_ICON());
+		                 Constantes.getLOGO_UFC());
 		              messageBodyPart.setDataHandler(new DataHandler(logoUFC));
 		              messageBodyPart.addHeader("Content-ID", "<logoUFC>");
 	
@@ -794,21 +795,18 @@ public class Email implements Runnable{
 			try {
 				this.sendHtmlEmail();
 			} catch (MalformedURLException | EmailException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else if (TYPE_EMAIL == 2) {
 			try {
 				this.sendHtmlEmailSet();
 			} catch (MalformedURLException | EmailException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else {
 			try {
 				this.sendHtmlEmailUsuario();
 			} catch (MalformedURLException | EmailException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

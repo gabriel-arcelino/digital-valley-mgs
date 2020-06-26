@@ -28,7 +28,7 @@
                 <div class="col-sm-8">
                     <nav class="breadcrumb">
                         <span class="breadcrumb-item">Você está em:</span> 
-                        <a class="breadcrumb-item" href="/Darwin/">Início</a>
+                        <a class="breadcrumb-item" href="${pageContext.request.contextPath}/">Início</a>
                         <a class="breadcrumb-item active" href="#">Minhas Seleções</a>
                     </nav>
                 <c:if test="${not empty mensagem}">

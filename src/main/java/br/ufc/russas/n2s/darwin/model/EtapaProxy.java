@@ -43,15 +43,17 @@ public class EtapaProxy extends Etapa{
     }
     
     public void adicionaAvaliador(Selecao selecao, Etapa etapa, UsuarioDarwin usuario) throws IllegalAccessException {
-       if (getUsuario().getPermissoes().contains(EnumPermissao.RESPONSAVEL) && selecao.isResponsavel(getUsuario())) {
+       System.out.println("ENTROU NO METODO");
+    	if ((getUsuario().getPermissoes().contains(EnumPermissao.RESPONSAVEL) && selecao.isResponsavel(getUsuario())) || (getUsuario().getPermissoes().contains(EnumPermissao.ADMINISTRADOR))) {
            etapa.adicionaAvaliador(usuario);
+           System.out.println("ENTROU NO IF");
        } else {
            throw new IllegalAccessException("Você não é o responsável por esta seleção: <b> ".concat(selecao.getTitulo()).concat("</b>"));
        }
     }
      
     public void removeAvaliador(Selecao selecao, Etapa etapa, UsuarioDarwin usuario) throws IllegalAccessException{
-        if (getUsuario().getPermissoes().contains(EnumPermissao.RESPONSAVEL) && selecao.isResponsavel(getUsuario())) {
+        if ((getUsuario().getPermissoes().contains(EnumPermissao.RESPONSAVEL) && selecao.isResponsavel(getUsuario())) || (getUsuario().getPermissoes().contains(EnumPermissao.ADMINISTRADOR))) {
             etapa.removeAvaliador(usuario);
         } else {
             throw new IllegalAccessException("Você não é o responsável por esta seleção: <b> ".concat(selecao.getTitulo()).concat("</b>"));

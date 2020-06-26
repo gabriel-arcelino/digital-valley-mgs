@@ -8,7 +8,6 @@ package br.ufc.russas.n2s.darwin.service;
 import br.ufc.russas.n2s.darwin.beans.ParticipanteBeans;
 import br.ufc.russas.n2s.darwin.dao.ParticipanteDAOIfc;
 import br.ufc.russas.n2s.darwin.model.Participante;
-import br.ufc.russas.n2s.darwin.model.UsuarioDarwin;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -76,20 +75,16 @@ public class ParticipanteServiceImpl implements ParticipanteServiceIfc {
     		if (participantes.size() == 1) return participantes;
 	    	List<ParticipanteBeans> p = new ArrayList<>();
 	    	ParticipanteBeans menor = participantes.get(0);
-	    	int tam, remove = 0;
+	    	int tam = 0;
 	    	tam = participantes.size();
 	    	
 	    	for (int j=0;j<tam;j++) {
 		    	for (int i=1;i < tam; i++) {
 		    		if ((participantes.get(i).getCandidato().getNome().compareToIgnoreCase(menor.getCandidato().getNome())) <= -1) {
 		    			menor = participantes.get(i);
-		    			remove = i;
-		    			
 		    		}
 		    	}
 		    	p.add(menor);
-		    	//participantes.remove(remove);
-		    	//tam = participantes.size();
 	    	}
 	    	return p;
     	

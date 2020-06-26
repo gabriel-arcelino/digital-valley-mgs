@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufc.russas.n2s.darwin.beans;
 
 import br.ufc.russas.n2s.darwin.model.Arquivo;
@@ -16,9 +11,6 @@ import java.time.LocalDateTime;
  */
 public class ArquivoBeans implements Beans, Serializable {
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 8480576039354785084L;
 	
 	private long codArquivo;

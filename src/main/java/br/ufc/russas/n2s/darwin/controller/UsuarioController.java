@@ -9,15 +9,12 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-
 import br.ufc.russas.n2s.darwin.beans.UsuarioBeans;
 import br.ufc.russas.n2s.darwin.service.UsuarioServiceIfc;
+import util.Constantes;
 
 @Controller("usuarioController")
 @RequestMapping(value = "/usuario")
@@ -43,15 +40,15 @@ public class UsuarioController {
 				 session.setAttribute("mensagem", "Agora você não receberá atualizações por e-mail!");
 			 }
 			 session.setAttribute("status", "success");
-			 response.sendRedirect("/Darwin/");
+			 response.sendRedirect(Constantes.getAppUrl()+"/");
 		 } catch (NullPointerException e) {
 			 session.setAttribute("mensagem", e.getMessage());
 			 session.setAttribute("status", "danger");
-			 response.sendRedirect("/Darwin/");
+			 response.sendRedirect(Constantes.getAppUrl()+"/");
 		 } catch (Exception e) {
 			 session.setAttribute("mensagem", e.getMessage());
 			 session.setAttribute("status", "danger");
-			 response.sendRedirect("/Darwin/");
+			 response.sendRedirect(Constantes.getAppUrl()+"/");
 		 }
 	 }
 }

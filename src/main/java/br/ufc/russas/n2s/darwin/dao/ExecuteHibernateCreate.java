@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufc.russas.n2s.darwin.dao;
 
 import br.ufc.russas.n2s.darwin.model.Arquivo;
@@ -21,14 +16,14 @@ import org.hibernate.tool.hbm2ddl.SchemaExport;
 public class ExecuteHibernateCreate {
     public static void main(int argc, String[] args){
         Configuration conf = new Configuration();
-	conf.configure("/WEB-INF/hibernate.cfg.xml");
-        conf.addAnnotatedClass(Arquivo.class);
-            conf.addAnnotatedClass(Documentacao.class);
-            conf.addAnnotatedClass(Periodo.class);
-            conf.addAnnotatedClass(UsuarioDarwin.class);
-            conf.addAnnotatedClass(Etapa.class);
-            conf.addAnnotatedClass(Selecao.class);
+    	conf.configure("/WEB-INF/hibernate.cfg.xml");
+    	conf.addAnnotatedClass(Arquivo.class);
+        conf.addAnnotatedClass(Documentacao.class);
+        conf.addAnnotatedClass(Periodo.class);
+        conf.addAnnotatedClass(UsuarioDarwin.class);
+        conf.addAnnotatedClass(Etapa.class);
+        conf.addAnnotatedClass(Selecao.class);
         SchemaExport se = new SchemaExport(conf);
-	se.create(true, true);
+        se.create(true, true);
     }
 }

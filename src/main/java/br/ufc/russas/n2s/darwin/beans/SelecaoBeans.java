@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufc.russas.n2s.darwin.beans;
 
 
@@ -11,6 +6,8 @@ import br.ufc.russas.n2s.darwin.model.EnumEstadoSelecao;
 import br.ufc.russas.n2s.darwin.model.Selecao;
 import br.ufc.russas.n2s.darwin.model.Etapa;
 import br.ufc.russas.n2s.darwin.model.UsuarioDarwin;
+import br.ufc.russas.n2s.darwin.service.EtapaServiceIfc;
+import br.ufc.russas.n2s.darwin.service.EtapaServiceImpl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,27 +20,18 @@ import java.util.List;
  */
 public class SelecaoBeans implements Beans, Serializable {
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 7834513120454258554L;
 	
 	private long codSelecao;
-    //@NotNull @Size(min = 5)
     private String titulo;
     private String descricao;
     private List<UsuarioBeans> responsaveis = Collections.synchronizedList(new ArrayList<UsuarioBeans>());
     private EtapaBeans inscricao;
     private List<EtapaBeans> etapas;
-   // @Min(0)
     private int vagasRemuneradas;
-    //@Min(0)
     private int vagasVoluntarias;
-   // @NotNull
     private String descricaoPreRequisitos;
-   // @NotNull
     private String areaDeConcentracao;
-   // @NotNull
     private String categoria;
     private List<ArquivoBeans> aditivos;
     private List<ArquivoBeans> anexos;
@@ -101,7 +89,8 @@ public class SelecaoBeans implements Beans, Serializable {
     }
 
     public void setEtapas(List<EtapaBeans> etapas) {
-        this.etapas = etapas;
+    	EtapaServiceIfc etapaServ = new EtapaServiceImpl();
+        this.etapas = etapaServ.ordenaEtapasPorData(etapas);
     }
 
     public int getVagasRemuneradas() {

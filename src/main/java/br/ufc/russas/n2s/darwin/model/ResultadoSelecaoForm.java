@@ -18,7 +18,5 @@ public class ResultadoSelecaoForm {
 	public void setEtapas(List<EtapaBeans> listaEtapas) {
 		this.etapas = listaEtapas;
 	}
-	
-
 }
 

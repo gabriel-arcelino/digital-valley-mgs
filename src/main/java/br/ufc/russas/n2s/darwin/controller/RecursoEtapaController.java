@@ -2,7 +2,6 @@ package br.ufc.russas.n2s.darwin.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.xml.soap.AttachmentPart;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -56,7 +55,6 @@ public class RecursoEtapaController {
     public String getRecursoDaEtapa(@PathVariable long codEtapa, @PathVariable long codParticipante, Model model, HttpServletRequest request){
 		HttpSession session = request.getSession();
         UsuarioBeans usuario = (UsuarioBeans) session.getAttribute("usuarioDarwin");
-        //UsuarioBeans usuario = (UsuarioBeans) request.getSession().getAttribute("usuarioDarwin");
     	if (usuario.getPermissoes().contains(EnumPermissao.ADMINISTRADOR) || usuario.getPermissoes().contains(EnumPermissao.RESPONSAVEL)) {
 	        ParticipanteBeans participante = participanteServiceIfc.getParticipante(codParticipante);
 	        EtapaBeans etapa  = etapaServiceIfc.getEtapa(codEtapa);

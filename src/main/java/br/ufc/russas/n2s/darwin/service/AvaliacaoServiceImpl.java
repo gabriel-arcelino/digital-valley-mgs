@@ -6,21 +6,10 @@
 package br.ufc.russas.n2s.darwin.service;
 
 import br.ufc.russas.n2s.darwin.beans.AvaliacaoBeans;
-import br.ufc.russas.n2s.darwin.beans.DocumentacaoBeans;
 import br.ufc.russas.n2s.darwin.beans.EtapaBeans;
-import br.ufc.russas.n2s.darwin.beans.ParticipanteBeans;
-import br.ufc.russas.n2s.darwin.beans.SelecaoBeans;
 import br.ufc.russas.n2s.darwin.beans.UsuarioBeans;
 import br.ufc.russas.n2s.darwin.dao.AvaliacaoDAOIfc;
-import br.ufc.russas.n2s.darwin.dao.EtapaDAOIfc;
 import br.ufc.russas.n2s.darwin.model.Avaliacao;
-import br.ufc.russas.n2s.darwin.model.Documentacao;
-import br.ufc.russas.n2s.darwin.model.Etapa;
-import br.ufc.russas.n2s.darwin.model.EtapaProxy;
-import br.ufc.russas.n2s.darwin.model.Participante;
-import br.ufc.russas.n2s.darwin.model.Selecao;
-import br.ufc.russas.n2s.darwin.model.SelecaoProxy;
-import br.ufc.russas.n2s.darwin.model.UsuarioDarwin;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

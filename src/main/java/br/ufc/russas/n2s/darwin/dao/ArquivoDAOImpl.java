@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import br.ufc.russas.n2s.darwin.model.Arquivo;
-import br.ufc.russas.n2s.darwin.model.Documentacao;
 
 public class ArquivoDAOImpl implements ArquivoDAOIfc {
 	

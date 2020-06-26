@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufc.russas.n2s.darwin.controller;
 
 import java.io.File;
@@ -57,7 +52,7 @@ public class CadastrarSelecaoController {
     private UsuarioServiceIfc usuarioServiceIfc;
     private LogServiceIfc logServiceIfc;
     
-    List<UsuarioBeans> responsaveis = new ArrayList	();
+    List<UsuarioBeans> responsaveis = new ArrayList<UsuarioBeans>();
     
     public SelecaoServiceIfc getSelecaoServiceIfc() {
         return selecaoServiceIfc;
@@ -116,7 +111,7 @@ public class CadastrarSelecaoController {
                 }
             }
         }
-        selecao.setEstado(EnumEstadoSelecao.ESPERA);
+        selecao.setEstado(EnumEstadoSelecao.EMEDICAO);
         selecao = this.getSelecaoServiceIfc().adicionaSelecao(selecao);
         try {
         	File dir = new File(Constantes.getDocumentsDir()+File.separator+"Selecao_"+selecao.getCodSelecao()+File.separator);
@@ -135,6 +130,7 @@ public class CadastrarSelecaoController {
                 edital.setArquivo(temp);
                 edital.setData(LocalDateTime.now());
                 selecao.setEdital(edital);
+                output.close();
             }
             if (nomeAnexos != null && linkAnexos != null) { // para anexos
                 ArrayList<ArquivoBeans> anexos = new ArrayList<>();
@@ -152,6 +148,7 @@ public class CadastrarSelecaoController {
                     anexo.setArquivo(temp);
                     anexo.setData(LocalDateTime.now());
                     anexos.add(anexo);
+                    output.close();
                 }
                 selecao.setAnexos(anexos);
             }
@@ -171,6 +168,7 @@ public class CadastrarSelecaoController {
                     aditivo.setArquivo(temp);
                     aditivo.setData(LocalDateTime.now());
                     aditivos.add(aditivo);
+                    output.close();
                 }
                 selecao.setAditivos(aditivos);
             }

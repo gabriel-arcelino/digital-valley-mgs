@@ -31,9 +31,9 @@
                 <div class="col-sm-8">
                     <nav class="breadcrumb">
                         <span class="breadcrumb-item">Você está em:</span> 
-                        <a class="breadcrumb-item" href="/Darwin/">Início</a>
-                        <a class="breadcrumb-item" href="/Darwin/selecao/${selecao.codSelecao}">${selecao.titulo}</a>
-                        <a class="breadcrumb-item" href="/Darwin/resultadoEtapa/${etapa.codEtapa}">${etapa.titulo}</a>
+                        <a class="breadcrumb-item" href="${pageContext.request.contextPath}/">Início</a>
+                        <a class="breadcrumb-item" href="${pageContext.request.contextPath}/selecao/${selecao.codSelecao}">${selecao.titulo}</a>
+                        <a class="breadcrumb-item" href="${pageContext.request.contextPath}/resultadoEtapa/${etapa.codEtapa}">${etapa.titulo}</a>
                         <a class="breadcrumb-item active" href="#">Recurso</a>
                     </nav>
                 <c:if test="${not empty mensagem}">
@@ -68,7 +68,7 @@
                                 <td>${participanteEtapa.candidato.nome}</td>
                                 <c:if test="${(etapa.criterioDeAvaliacao.criterio == 1)}">
 	                                <c:forEach var="avaliacao" items="${avaliacoes}">
-	                                	<form method="POST" action="/Darwin/avaliar/recurso/etapa/${etapa.codEtapa}/avaliacao/${avaliacao.codAvaliacao}" accept-charset="UTF-8">                              	
+	                                	<form method="POST" action="${pageContext.request.contextPath}/avaliar/recurso/etapa/${etapa.codEtapa}/avaliacao/${avaliacao.codAvaliacao}" accept-charset="UTF-8">                              	
 		                                	<td scope="col" style="text-align:center">${avaliacao.avaliador.nome}</td>
 		                                	<td class="text-center" scope="col"><input class="form-control" style="width: 150px"type="number" step="0.01" value="${avaliacao.nota}" name="nota"/> </td>
 	                                		<td scope="col" ><input type="submit" class="btn btn-primary btn-sm" value="Salvar"/> </td>
@@ -78,7 +78,7 @@
                                 <c:if test="${(etapa.criterioDeAvaliacao.criterio == 2)}">
                                 <c:forEach var="avaliacao" items="${avaliacoes}"> 
                                 	<td scope="col" style="text-align:center">${avaliacao.avaliador.nome}</td>
-                                	<form method="POST" action="/Darwin/avaliar/recurso/etapa/${etapa.codEtapa}/avaliacao/${avaliacao.codAvaliacao}" accept-charset="UTF-8">                              	
+                                	<form method="POST" action="${pageContext.request.contextPath}/avaliar/recurso/etapa/${etapa.codEtapa}/avaliacao/${avaliacao.codAvaliacao}" accept-charset="UTF-8">                              	
 		                                <td class="text-center" scope="col">
 		                                <select class="form-control" style="width: 150px"type="number" value="${avaliacao.nota}" name="estado">
 	                                		<option ${(avaliacao.aprovado == true) ? "selected='selected'" : ""} value="1">Aprovado</option>
@@ -92,7 +92,7 @@
                                 <c:if test="${(etapa.criterioDeAvaliacao.criterio == 3)}">
                                 <c:forEach var="avaliacao" items="${avaliacoes}"> 
                                 	<td scope="col" style="text-align:center">${avaliacao.avaliador.nome}</td>
-                                	<form method="POST" action="/Darwin/avaliar/recurso/etapa/${etapa.codEtapa}/avaliacao/${avaliacao.codAvaliacao}" accept-charset="UTF-8">                              	
+                                	<form method="POST" action="${pageContext.request.contextPath}/avaliar/recurso/etapa/${etapa.codEtapa}/avaliacao/${avaliacao.codAvaliacao}" accept-charset="UTF-8">                              	
 		                               <td class="text-center" scope="col">
 		                               <select class="form-control" style="width: 150px"type="number" value="${avaliacao.nota}" name="estado">
 	                                		<option ${(avaliacao.aprovado == true) ? "selected='selected'" : ""} value="1">Deferido</option>

@@ -1,19 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.ufc.russas.n2s.darwin.dao;
 
 import br.ufc.russas.n2s.darwin.model.Participante;
-import br.ufc.russas.n2s.darwin.model.UsuarioDarwin;
 
 import java.util.List;
 
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -54,7 +47,9 @@ public class ParticipanteDAOImpl implements ParticipanteDAOIfc{
     public Participante getParticipante(Participante participante) {
         return this.daoImpl.getObject(participante, participante.getCodParticipante());
     }
+    
     @Override
+    @SuppressWarnings("unchecked")
     public List<Participante> listaParticipantesPorEtapa(int codEtapa) {
     	Session session = this.daoImpl.getSessionFactory().openSession();
     	Transaction t = session.beginTransaction();

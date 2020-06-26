@@ -10,9 +10,7 @@ import br.ufc.russas.n2s.darwin.model.Participante;
 import br.ufc.russas.n2s.darwin.model.ResultadoParticipanteSelecao;
 
 public class ResultadoParticipanteSelecaoBeans implements Beans, Serializable{
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = -8523441695215586777L;
 	
 	private int colocacao;

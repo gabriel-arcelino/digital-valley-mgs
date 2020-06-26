@@ -7,7 +7,6 @@ import br.ufc.russas.n2s.darwin.model.Arquivo;
 
 public interface ArquivoDAOIfc {
 
-    
     public Arquivo adicionaArquivo(Arquivo arquivo);
 
     public Arquivo atualizaArquivo(Arquivo arquivo);

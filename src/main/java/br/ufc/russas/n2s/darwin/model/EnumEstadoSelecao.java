@@ -12,7 +12,18 @@ import java.time.LocalDate;
  * @author Wallison Carlos
  */
 public enum EnumEstadoSelecao implements EstadoSelecao{
-    ESPERA(1){
+	EMEDICAO(0){
+        @Override
+        public EnumEstadoSelecao execute(Selecao selecao){
+            boolean divulgada = selecao.isDivulgada();
+            if (!divulgada){
+                return this;
+            } else {
+                return ESPERA.execute(selecao);
+            }
+        }
+    },
+	ESPERA(1){
         @Override
         public EnumEstadoSelecao execute(Selecao selecao){
             LocalDate inicio = selecao.getInscricao().getPeriodo().getInicio();
@@ -52,7 +63,7 @@ public enum EnumEstadoSelecao implements EstadoSelecao{
             if(selecao.getUltimaEtapa().getPeriodo().getTermino().isBefore(LocalDate.now()) ){
                 return this;
             } else {
-                return ABERTA.execute(selecao);
+                return EMEDICAO.execute(selecao);
             } 
         }
     };
@@ -73,10 +84,10 @@ public enum EnumEstadoSelecao implements EstadoSelecao{
     }
     
     private void setEstado(int estado) {
-        if (estado>=1 && estado <= 4) {
+        if (estado>=0 && estado <= 4) {
             this.estado = estado;
         } else {
-            throw new IllegalArgumentException("Estado de seleção deve ser maior igual a um e menor igual a quatro!");
+            throw new IllegalArgumentException("Estado de seleção deve ser maior igual a 0 e menor igual a quatro!");
         }
     }
 
