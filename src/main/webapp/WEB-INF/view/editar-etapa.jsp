@@ -408,7 +408,7 @@
 
 					<br> <a
 						href="${pageContext.request.contextPath}/selecao/${selecao.codSelecao}"
-						class="btn btn-secondary"> Cancelar </a> <input type="button"
+						class="btn btn-secondary"> Cancelar </a> <input id="save" type="button"
 						value="Salvar" class="btn btn-primary" data-toggle="modal"
 						data-target="#confirmarEtapa">
 
@@ -599,6 +599,7 @@
 							+ codAvaliadores[i] + '\')">clear</button></li>';
 				}
 			}
+			verificaAvaliador()
 		}
 		function removeAvaliador(codAvaliador) {
 			codAvaliador = Number(codAvaliador);
@@ -606,10 +607,21 @@
 				if (codAvaliadores[i] === codAvaliador) {
 					document.getElementById("avaliadorOption-" + codAvaliador
 							+ "").disabled = "";
-					codAvaliadores[i] = "";
+					codAvaliadores.splice(i,1);
+					nomeAvaliadores.splice(i,1);
+					numAvaliadores--;
 				}
 			}
 			atualizaAvaliadores();
+		}
+		
+		function verificaAvaliador(){
+			if(codAvaliadores.length > 0){
+				document.getElementById("save").disabled = false;
+			}else{
+				document.getElementById("save").disabled = true;
+			}
+			console.log(codAvaliadores)
 		}
 
 		function adicionaDocumento() {

@@ -7,5 +7,5 @@
 <!--  adicionou margin-botton -3px ou 0rem e o getYear() -->
 <nav class="navbar navbar-light bg-light" style="bottom: 0px;">
     <a class="navbar-brand" href="#">Darwin</a>
-    <p style="margin-botton : -3px">© Núcleo de Soluções em Software (N2S), <%=LocalDate.now().getYear()%>.</p>
+    <p style="margin-bottom: -3px">© Núcleo de Soluções em Software (N2S), <%=LocalDate.now().getYear()%>.</p>
 </nav>

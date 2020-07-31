@@ -227,7 +227,7 @@
 
 							<div class="invalid-feedback"></div>
 
-							<br> <label for="AvaliadoresInput">Avaliadores</label>
+							<br> <label for="AvaliadoresInput">Avaliadores*</label>
 							<div class="form-row">
 								<select id="avaliadorInput" class="form-control col-md-8"
 									style="margin-left: 3px"
@@ -250,9 +250,9 @@
 					</div>
 					<br> <a
 						href="${pageContext.request.contextPath}/selecao/${selecao.codSelecao}"
-						class="btn btn-secondary"> Cancelar </a> <input type="button"
+						class="btn btn-secondary"> Cancelar </a> <input id="save" type="button"
 						class="btn btn-primary" value="Salvar" data-toggle="modal"
-						data-target="#confirmarEtapa">
+						data-target="#confirmarEtapa" disabled="true">
 
 					<!-- Modal -->
 					<div class="modal fade" id="confirmarEtapa" tabindex="-1"
@@ -274,7 +274,7 @@
 									<button type="button" class="btn btn-secondary btn-sm"
 										data-dismiss="modal">Cancelar</button>
 									<button type="submit" class="btn btn-primary btn-sm"
-										onclick="verificarDescricao()">Confirmar</button>
+										onclick="verificaDescricao()" >Confirmar</button>
 								</div>
 							</div>
 						</div>
@@ -470,25 +470,35 @@
 			list.innerHTML = "";
 			for (i = 0; i < listaAvaliadores.length; i++) {
 				if (listaAvaliadores[i] !== "") {
-					list.innerHTML += '<li class="list-group-item"><input type="hidden" name="codAvaliadores" value="'+codAvaliadores[i]+'" style="display: none;"> '
+					list.innerHTML += '<li class="list-group-item"><input type="hidden" name="codAvaliadores" value="'+codAvaliadores[i]+'" style="display: none; "> '
 							+ listaAvaliadores[i]
 							+ '<button type="button" class="btn btn-light btn-sm material-icons float-right" style="font-size: 15px;" onclick="removeAvaliador(\''
 							+ listaAvaliadores[i] + '\')">clear</button></li>';
 				}
 			}
+			verificaAvaliador();
 		}
 		function removeAvaliador(codAvaliador) {
 			for (i = 0; i < listaAvaliadores.length; i++) {
 				if (listaAvaliadores[i] === codAvaliador) {
 					document.getElementById("avaliadorOption-" + codAvaliador
 							+ "").disabled = "";
-					listaAvaliadores[i] = "";
-					codAvaliadores[i] = "";
-
+					listaAvaliadores.splice(i,1);
+					codAvaliadores.splice(i,1);
+					numAvaliadores--;
 				}
 			}
 			atualizaAvaliadores();
 		}
+		
+		function verificaAvaliador(){
+			if(listaAvaliadores.length > 0){
+				document.getElementById("save").disabled = false;
+			}else{
+				document.getElementById("save").disabled = true;
+			}
+		}
+		
 
 		function atualizaCampoNotaMinima() {
 			if (document.getElementById("criterioInput").value === '1'
@@ -513,10 +523,10 @@
 
 		function verificarDescricao() {
 			let descricao_div = document.getElementsByClassName('cazary')[0];
-
+			
 			if (descricao_div != undefined) {
 				let frame = descricao_div.getElementsByTagName('iframe')[0];
-
+				
 				if (frame.contentDocument.getElementsByClassName('empty').length == 1
 						|| frame.contentDocument.getElementsByTagName('body')[0].textContent.length === 0) {
 					frame.contentDocument.getElementsByTagName('body')[0].className = 'empty';
