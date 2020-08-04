@@ -210,9 +210,13 @@
 											value="${responsavel.codUsuario}-${responsavel.nome}">${responsavel.nome}</option>
 									</c:if>
 								</c:forEach>
-							</select> &nbsp;&nbsp;
+							</select> 
+							&nbsp;&nbsp;
+							<input type="button" id="info-popover" class="btn btn-info" style="border-radius:100%;height:20px;width:20px;padding:1px;line-height:0.5rem" data-toggle="popover" data-content="O criador da seleção por padrão do sistema já é incluído na lista de responsáveis pela seleção." data-placement="right" value="?">
+			
 							<!-- <input type="button" class="btn btn-secondary btn-sm " onclick="adicionaResponsavel()" value="Adicionar"> -->
 						</div>
+						<small id="tituloHelp" class="form-text text-muted">Observação: O criador da seleção por padrão do sistema já é um dos responsáveis</small>
 						<br>
 						<ul class="list-group col-md-8" id="listaResponsaveis">
 						</ul>
@@ -308,6 +312,13 @@
 
 			}
 		}
+		
+			
+		$(function(){
+			$('[data-toggle="popover"]').popover()
+		});
+
+		
 	</script>
 </body>
 </html>
