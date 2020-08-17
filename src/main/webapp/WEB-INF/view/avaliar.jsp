@@ -49,6 +49,7 @@
 					href="${pageContext.request.contextPath}/">Início</a> <a
 					class="breadcrumb-item"
 					href="${pageContext.request.contextPath}/selecao/${selecao.codSelecao}">${selecao.titulo}</a>
+					<a class="breadcrumb-item" href="${etapa.codEtapa}">${etapa.titulo}</a>
 				<a class="breadcrumb-item active" href="#">Avaliar participantes</a>
 				</nav>
 				<c:if test="${not empty mensagem}">
