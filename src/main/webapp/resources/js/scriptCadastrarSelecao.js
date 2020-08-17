@@ -15,11 +15,15 @@ var numAnexo = 0;
 function adicionaAnexo() {
     var nomeAnexo = document.getElementById("nomeAnexoInput").value;
     var linkAnexo = document.getElementById("linkAnexoInput").value;
-    if (nomeAnexo !== "" && linkAnexo !== "") {
+    if(listaNomeAnexo.includes(nomeAnexo) || listaLinkAnexo.includes(linkAnexo)){
+    	window.alert(" O Nome ou o Link do anexo inserido já está incluso na lista");
+    }
+    if (nomeAnexo !== "" && linkAnexo !== "" && !listaNomeAnexo.includes(nomeAnexo) && !listaLinkAnexo.includes(linkAnexo)) {
         listaNomeAnexo[numAnexo] = nomeAnexo;
         listaLinkAnexo[numAnexo] = linkAnexo;
         numAnexo++;
     }
+    console.log(listaNomeAnexo.includes(nomeAnexo));
     document.getElementById("nomeAnexoInput").value = "";
     document.getElementById("linkAnexoInput").value = "";
     atualizaAnexo();
@@ -51,7 +55,10 @@ var numAditivo = 0;
 function adicionaAditivo() {
     var nomeAditivo = document.getElementById("nomeAditivoInput").value;
     var linkAditivo = document.getElementById("linkAditivoInput").value;
-    if (nomeAditivo !== "" && linkAditivo !== "") {
+    if(listaNomeAditivo.includes(nomeAditivo) || listaLinkAditivo.includes(linkAditivo)){
+    	window.alert(" O Nome ou o Link do aditivo inserido já está incluso na lista");
+    }
+    if (nomeAditivo !== "" && linkAditivo !== "" && !listaNomeAditivo.includes(nomeAditivo) && !listaLinkAditivo.includes(linkAditivo)) {
         listaNomeAditivo[numAditivo] = nomeAditivo;
         listaLinkAditivo[numAditivo] = linkAditivo;
         numAditivo++;
@@ -110,9 +117,9 @@ function removeResponsaveis(codResponsavel) {
     for (i = 0; i < listaResponsaveis.length; i++) {
         if (codResponsaveis[i] === codResponsavel) {
             document.getElementById("responsavelOption-" + codResponsavel + "").disabled = "";
-            listaResponsaveis[i] = "";
-            codResponsaveis[i] = "";
-
+            listaResponsaveis.splice(i,1);
+            codResponsaveis.splice(i,1);
+            numResponsaveis--;
         }
     }
     atualizaResponsaveis();

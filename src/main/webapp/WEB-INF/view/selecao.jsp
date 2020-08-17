@@ -636,7 +636,7 @@ ul {
 											</a>
 										</c:if>
 										<c:if
-											test="${(isResponsavel and (selecao.estado eq 'ESPERA')) or (fn:contains(permissoes, 'ADMINISTRADOR')) and (dateAgora < Inicio)  }">
+											test="${((isResponsavel) and (selecao.estado eq 'EMEDICAO')) or ((fn:contains(permissoes, 'ADMINISTRADOR')) and (dateAgora < Inicio))  }">
 											<a
 												href="${pageContext.request.contextPath}/removerEtapa/${selecao.codSelecao}/${etapa.codEtapa}"
 												class="btn btn-primary btn-sm" data-toggle="modal"

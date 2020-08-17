@@ -60,6 +60,8 @@
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
+					<c:set scope="session" var="mensagem" value=""></c:set>
+					<c:set scope="session" var="status" value=""></c:set>	
 				</c:if>
 				<h1>Avaliar participantes</h1>
 				<c:if test="${empty participantesEtapa}">
@@ -238,7 +240,7 @@
 											</div>
 											<div class="modal-footer">
 												<c:if test="${(etapa.estado) != FINALIZADA}">
-													<button type="submit" class="btn btn-primary">Salvar</button>
+													<button type="submit" id="save" onclick="ativarBtn()" class="btn btn-primary">Salvar</button>
 												</c:if>
 												
 												<button type="button" class="btn btn-secondary"
@@ -274,5 +276,18 @@
 	<!-- Include JS file. -->
 	<script type='text/javascript'
 		src='https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.8.5/js/froala_editor.min.js'></script>
+	<script>
+	
+		function ativarBtn(){
+			
+			var saveBtn = document.getElementById("save");
+			saveBtn.disabled = true;
+			
+			setTimeout(function(){ 
+			    saveBtn.disabled = false;
+			}, 5000);
+		}
+	
+	</script>
 </body>
 </html>

@@ -621,7 +621,6 @@
 			}else{
 				document.getElementById("save").disabled = true;
 			}
-			console.log(codAvaliadores)
 		}
 
 		function adicionaDocumento() {

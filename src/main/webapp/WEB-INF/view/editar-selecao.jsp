@@ -195,14 +195,13 @@
 								<div class="form-row">
 									<select id="responsavelInput" class="form-control col-md-8"
 										style="margin-left: 3px" onclick="adicionaResponsavel()">
-										<option selected="selected" disabled="disabled">Selecione
+										<option selected="selected" disabled="disabled" >Selecione
 											os responsáveis por esta seleção</option>
 										<c:forEach items="${usuarios}" var="usuario">
-											<c:if
-												test="${usuario.codUsuario != usuarioDarwin.codUsuario}">
+											<%--<c:if test="${usuario.codUsuario != usuarioDarwin.codUsuario}">--%>
 												<option id="responsavelOption-${usuario.codUsuario}"
 													value="${usuario.codUsuario}">${usuario.nome}</option>
-											</c:if>
+											<%--</c:if>--%>
 										</c:forEach>
 									</select> &nbsp;&nbsp;
 									<!-- <input type="button" class="btn btn-secondary btn-sm " onclick="adicionaResponsavel()" value="Adicionar"/>-->
@@ -373,16 +372,9 @@
 		}
 	</script>
 	<script>
-		var listaCodResponsaveis = $
-		{
-			codResponsaveis
-		};
+		var listaCodResponsaveis = ${codResponsaveis}
 		var codigoResponsavelSelecao = listaCodResponsaveis
-
-		var listaNomeResponsaveis = $
-		{
-			nomeResponsaveis
-		};
+		var listaNomeResponsaveis = ${nomeResponsaveis}
 		var nomeResponsaveis = [];//${responsaveis};
 		var codResponsaveis = [];
 		var numResponsaveis = 0;
@@ -391,15 +383,31 @@
 				.ready(
 						function() {
 							for (i = 0; i < listaCodResponsaveis.length; i++) {
-								document.getElementById("responsavelOption-"
-										+ listaCodResponsaveis[i] + "").disabled = "disabled";
+								
+								document.getElementById("responsavelOption-"+ listaCodResponsaveis[i] + "").disabled = "disabled";
 								codResponsaveis.push(listaCodResponsaveis[i]);
 								nomeResponsaveis.push(listaNomeResponsaveis[i]);
+								
 								numResponsaveis++;
 							}
 						});
 		function adicionaResponsavel() {
-			var codResponsavel = document.getElementById("responsavelInput").value;
+			if (parseInt(document.getElementById("responsavelInput").value) !== NaN) {
+				var codResponsavel = parseInt(document.getElementById("responsavelInput").value)
+				
+				var nomeResponsavel = document.getElementById("responsavelOption-"
+						+ codResponsavel).textContent;
+			
+				if (nomeResponsavel !== "") {
+					codResponsaveis[numResponsaveis] = Number(codResponsavel);
+					nomeResponsaveis[numResponsaveis] = nomeResponsavel;
+					document.getElementById("responsavelOption-" + codResponsavel + "").disabled = "disabled";
+					numResponsaveis++;
+				}
+				
+				document.getElementById("responsavelInput").value = "Selecione os avaliadores desta etapa";
+				document.getElementById("responsavelInput").disable = "";
+			/*var codResponsavel = document.getElementById("responsavelInput").value;
 			//var nomeResponsavel = $("#responsavelOption-"+codResponsavel+"").text();
 			var temp = document.getElementById("responsavelInput");
 			var nomeResponsavel = temp.options[temp.selectedIndex].text;
@@ -410,9 +418,11 @@
 				document.getElementById("responsavelOption-" + codResponsavel).disabled = "disabled";
 				numResponsaveis++;
 			}
-			document.getElementById("responsavelInput").value = "";
-			atualizaResponsaveis();
-
+			document.getElementById("responsavelInput").value = ""; */
+			
+			
+				atualizaResponsaveis(); 
+			}
 		}
 		function atualizaResponsaveis() {
 			var list = document.getElementById("listaResponsaveis");
@@ -432,7 +442,10 @@
 				if (codResponsaveis[i] === codResponsavel) {
 					document.getElementById("responsavelOption-"
 							+ codResponsavel + "").disabled = "";
-					codResponsaveis[i] = "";
+					codResponsaveis.splice(i,1);
+					nomeResponsaveis.splice(i,1);
+					numResponsaveis--;
+					//codResponsaveis[i] = "";
 				}
 			}
 			atualizaResponsaveis();

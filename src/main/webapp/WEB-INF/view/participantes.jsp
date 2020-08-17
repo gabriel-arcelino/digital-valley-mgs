@@ -58,7 +58,6 @@
                                 <th scope="col">CPF</th>
                                 <th scope="col">Nome</th>
                                 <th scope="col">E-mail</th>
-                                <th scope="col">Curso</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -67,7 +66,6 @@
                                 <td>${participante.candidato.CPF}</td>
                                 <td>${participante.candidato.nome}</td>
                                 <td>${participante.candidato.email}</td>
-                                <td>Informação do Curso</td>
                             </tr>
                            
                             </c:forEach>
