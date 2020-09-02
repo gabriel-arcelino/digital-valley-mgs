@@ -32,6 +32,8 @@
 </head>
 <body>
 	<c:import url="elements/menu-superior.jsp" charEncoding="UTF-8"></c:import>
+	<c:set var="permissoes"
+		value="${sessionScope.usuarioDarwin.permissoes}"></c:set>
 	<div class="container-fluid">
 		<div class="row row-offcanvas row-offcanvas-right">
 			<c:import url="elements/menu-lateral-esquerdo.jsp"
@@ -46,9 +48,19 @@
 				<a class="breadcrumb-item" 
 				href="${pageContext.request.contextPath}/selecao/${selecao.codSelecao}">${selecao.titulo}
 				</a>
-				<a class="breadcrumb-item" 
-				href="${pageContext.request.contextPath}/editarEtapa/${selecao.codSelecao}/${etapa.codEtapa}">${etapa.titulo}
-				</a>
+				<c:choose>
+    				<c:when test="${fn:contains(permissoes, 'ADMINISTRADOR')}">
+        				<a class="breadcrumb-item" 
+							href="${pageContext.request.contextPath}/editarEtapa/${selecao.codSelecao}/${etapa.codEtapa}">${etapa.titulo}
+						</a>
+    				</c:when>    
+    				<c:otherwise>
+       					<a class="breadcrumb-item"
+						href="#" >${etapa.titulo}
+						</a>
+    				</c:otherwise>
+				</c:choose>
+				
 				<a class="breadcrumb-item active"
 					href="${pageContext.request.contextPath}/selecao/${selecao.codSelecao}/${etapa.codEtapa}/pendencias">Pendências
 				</a> 

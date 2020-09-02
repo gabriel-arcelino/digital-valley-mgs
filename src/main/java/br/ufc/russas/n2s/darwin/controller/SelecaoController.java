@@ -131,7 +131,7 @@ public class SelecaoController {
 			for (i = 0; i < selecao.getEtapas().size(); i++) {
 				EtapaBeans etapa = (EtapaBeans) selecao.getEtapas().get(i);
 				etapabusiness = (Etapa) etapaServiceIfc.getEtapa(etapa.getCodEtapa()).toBusiness();
-				etapa.getAvaliacoes().removeAll(etapa.getAvaliacoes());
+				//etapa.getAvaliacoes().removeAll(etapa.getAvaliacoes());
 				selecao.getEtapas().remove(i);
 				selecao.getEtapas().add(i, etapa);
 				situacao.put(etapa, this.etapaServiceIfc.getSituacao(etapa, usuario));

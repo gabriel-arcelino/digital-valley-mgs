@@ -627,7 +627,7 @@ ul {
 											</c:if>
 										</c:if>
 										<c:if
-											test="${((isResponsavel) and ((etapa.estado eq 'ESPERA') or (etapa.estado eq 'ANDAMENTO'))) or (fn:contains(permissoes, 'ADMINISTRADOR') or !selecao.divulgada)}">
+											test="${((isResponsavel) and ((etapa.estado eq 'ESPERA'))) or (fn:contains(permissoes, 'ADMINISTRADOR') or !selecao.divulgada)}">
 											<a
 												href="${pageContext.request.contextPath}/editarEtapa/${selecao.codSelecao}/${etapa.codEtapa}"
 												class="btn btn-primary btn-sm"
@@ -691,15 +691,27 @@ ul {
 											</a>
 										</c:if>
 										<c:if
-											test="${(estado == 3) and (!etapa.divulgadoResultado) and ((fn:contains(permissoes, 'ADMINISTRADOR')) or (isResponsavel))}">
+											test="${(estado == 2 or estado == 3) and (!etapa.divulgadoResultado) and ((fn:contains(permissoes, 'ADMINISTRADOR')) or (isResponsavel))}">
 											<c:set var="pendente" value="false"></c:set>
-											<c:forEach var="avaliacao" items="${etapa.avaliacoes}">
+											<c:forEach var="avaliador" items="${etapa.avaliadores}">
+
+											    <c:set var="avaliado" value="0"></c:set>
+											    <c:forEach var="avaliacao" items="${etapa.avaliacoes}">
+											    		<c:if test="${avaliacao.avaliador.codUsuario eq avaliador.codUsuario}">
+											    			<c:set var="avaliado" value="${avaliado + 1}"></c:set>
+											    		</c:if>
+											    </c:forEach>
+											    <c:if test="${fn:length(etapa.participantes) - avaliado ne 0}">
+											    	<c:set var="pendente" value="true"></c:set>
+											    </c:if>
+											 </c:forEach>
+											<!--<c:forEach var="avaliacao" items="${etapa.avaliacoes}">
 												<c:if test="${avaliacao.estado eq 'PENDENTE'}">
-													<c:set var="pendente" value="true"></c:set>
+													<c:set var="pendente" value="true"></c:set>	
 												</c:if>
-											</c:forEach>
+											</c:forEach>-->
 											<c:if test="${pendente and selecao.divulgada}">
-												<a href="" class="btn btn-primary btn-sm active"
+												<a href="" class="btn btn-primary btn-sm"
 													class="btn btn-primary btn-sm"
 													style="height: 30px; margin-top: 5px;" data-toggle="modal"
 													data-target="#divulgaresultadoetapa"> <i
@@ -882,7 +894,7 @@ ul {
 			}
 
 			return addedClass;
-		});
+		});	
 	</script>
 </body>
 <%
