@@ -517,8 +517,8 @@ ul {
 											test="${(selecao.inscricao.divulgadoResultado) and (not empty selecao.inscricao.avaliacoes)}">
 											<a
 												href="${pageContext.request.contextPath}/resultadoEtapa/${selecao.inscricao.codEtapa}"
-												class="btn btn-primary btn-sm active"
-												class="btn btn-primary btn-sm" style="height: 30px;"> <i
+												class="btn btn-primary btn-sm"
+												class="btn btn-primary btn-sm" style="height: 30px; margin-top: 5px;"> <i
 												class="fas fa-eye"></i> Ver Resultado
 											</a>
 										</c:if>
@@ -691,7 +691,7 @@ ul {
 											</a>
 										</c:if>
 										<c:if
-											test="${(estado == 2 or estado == 3) and (!etapa.divulgadoResultado) and ((fn:contains(permissoes, 'ADMINISTRADOR')) or (isResponsavel))}">
+											test="${(estado == 3) and (!etapa.divulgadoResultado) and ((fn:contains(permissoes, 'ADMINISTRADOR')) or (isResponsavel))}">
 											<c:set var="pendente" value="false"></c:set>
 											<c:forEach var="avaliador" items="${etapa.avaliadores}">
 
@@ -792,7 +792,7 @@ ul {
 											test="${(etapa.divulgadoResultado) and ((isResponsavel and (estado == 3)) or (fn:contains(permissoes, 'ADMINISTRADOR') and (estado == 3)) or (fn:contains(permissoes, 'PARTICIPANTE') and (estado == 3)))}">
 											<a
 												href="${pageContext.request.contextPath}/resultadoEtapa/${etapa.codEtapa}"
-												class="btn btn-primary btn-sm" style="height: 30px;"> <i
+												class="btn btn-primary btn-sm" style="height: 30px; margin-top: 5px;"> <i
 												class="fas fa-eye"></i> Ver Resultado
 											</a>
 										</c:if>

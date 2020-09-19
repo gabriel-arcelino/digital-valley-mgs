@@ -81,7 +81,7 @@
 					<div class="invalid-feedback"></div>
 					<br> <label for="descricaoInput">Descrição*</label>
 					<textarea class="form-control" name="descricao" id="descricaoInput"
-						placeholder="Digite uma breve descrição sobre a etapa" required>${etapa.descricao}</textarea>
+						placeholder="Digite uma breve descrição sobre a etapa" required style="line-height:4">${etapa.descricao}</textarea>
 					<div class="invalid-feedback"></div>
 					<br>
 
@@ -274,7 +274,7 @@
 									<button type="button" class="btn btn-secondary btn-sm"
 										data-dismiss="modal">Cancelar</button>
 									<button type="submit" class="btn btn-primary btn-sm"
-										onclick="verificaDescricao()" >Confirmar</button>
+										onclick="verificarDescricao()" >Confirmar</button>
 								</div>
 							</div>
 						</div>
@@ -498,7 +498,7 @@
 		}
 		
 		function verificaAvaliador(){
-			if(listaAvaliadores.length > 0){
+			if(listaAvaliadores.length > 0 && verificarDescricao()){
 				document.getElementById("save").disabled = false;
 			}else{
 				document.getElementById("save").disabled = true;
@@ -554,44 +554,18 @@
 			document.getElementById("campoNotaMinima").innerHTML = "";
 		}
 
-		function verificarDescricao() {
-			let descricao_div = document.getElementsByClassName('cazary')[0];
-			
-			if (descricao_div != undefined) {
-				let frame = descricao_div.getElementsByTagName('iframe')[0];
-				
-				if (frame.contentDocument.getElementsByClassName('empty').length == 1
-						|| frame.contentDocument.getElementsByTagName('body')[0].textContent.length === 0) {
-					frame.contentDocument.getElementsByTagName('body')[0].className = 'empty';
-
-					descricao_div.setAttribute('style', 'border-color: red');
-					return false;
-				} else {
-					descricao_div.setAttribute('style', '');
-					return true;
-				}
-
-			}
-		}
 
 		function limparTextAreaDescricao() {
 			let descricao_div = document.getElementsByClassName('cazary')[0];
 			let frame = descricao_div.getElementsByTagName('iframe')[0];
 			frame.contentDocument.getElementsByTagName('body')[0].className = 'empty';
 		}
+		
 	</script>
 	<script
-		src="${pageContext.request.contextPath}/resources/js/cazary.min.js"></script>
-	<script type="text/javascript">
-		(function($, window) {
-			$(function($) {
-				$("textarea#descricaoInput").cazary({
-					commands : "FULL"
-				});
-
-			});
-		})(jQuery, window);
+		src="${pageContext.request.contextPath}/resources/js/cazary.min.js">
 	</script>
+
 </body>
 </html>
 

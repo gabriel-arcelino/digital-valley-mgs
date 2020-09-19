@@ -79,13 +79,13 @@
 						<br> <label for="descricaoInput">Descrição*</label>
 						<textarea class="form-control" rows="6" name="descricao"
 							id="descricaoInput"
-							placeholder="Digite uma breve descrição sobre a seleção" required>${selecao.descricao}</textarea>
+							placeholder="Digite uma breve descrição sobre a seleção" required style="line-height:2">${selecao.descricao}</textarea>
 						<div class="invalid-feedback"></div>
 						<br> <label for="preRequisitosInput"> Pré Requisitos</label>
 						<textarea name="descricaoPreRequisitos" class="form-control"
 							id="preRequisitosInput"
 							placeholder="Digite uma breve descrição sobre os pré requisitos para participar da seleção"
-							readonly="true">${selecao.descricaoPreRequisitos}</textarea>
+							readonly="true" style="line-height:4">${selecao.descricaoPreRequisitos}</textarea>
 						<br> <label for="categoriaInput">Categoria*</label> <select
 							type="text" name="categoria" class="form-control custom-select"
 							id="categoriaInput" required>
@@ -249,8 +249,7 @@
 									<div class="modal-footer">
 										<button type="button" class="btn btn-secondary btn-sm"
 											data-dismiss="modal">Cancelar</button>
-										<button type="submit" class="btn btn-primary btn-sm"
-											onclick="verificarDescricao()">Confirmar</button>
+										<button type="submit" class="btn btn-primary btn-sm">Confirmar</button>
 									</div>
 								</div>
 							</div>
@@ -452,36 +451,8 @@
 		}
 	</script>
 	<script
-		src="${pageContext.request.contextPath}/resources/js/cazary.min.js"></script>
-	<script type="text/javascript">
-		(function($, window) {
-			$(function($) {
-				$("textarea#descricaoInput").cazary({
-					commands : "FULL"
-				});
-
-				$("textarea#preRequisitosInput").cazary({
-					commands : "FULL"
-				});
-			});
-		})(jQuery, window);
-
-		function verificarDescricao() {
-			let descricao_div = document.getElementsByClassName('cazary')[0];
-
-			if (descricao_div != undefined) {
-				let frame = descricao_div.getElementsByTagName('iframe')[0];
-
-				if (frame.contentDocument.getElementsByClassName('empty').length == 1
-						|| frame.contentDocument.getElementsByTagName('body')[0].textContent.length === 0) {
-					descricao_div.setAttribute('style', 'border-color: red');
-					frame.contentDocument.getElementsByTagName('body')[0].className = 'empty';
-				} else {
-					descricao_div.setAttribute('style', '');
-				}
-
-			}
-		}
+		src="${pageContext.request.contextPath}/resources/js/cazary.min.js">
 	</script>
+	
 </body>
 </html>

@@ -169,7 +169,7 @@ public class SelecaoServiceImpl implements SelecaoServiceIfc {
 			if(e.getEstado() != estadoEtapa){
 				e.setEstado(estadoEtapa);
 				etapaDAOIfc.atualizaEtapa(e);
-			}
+			}	
 		}
 		
 		return (SelecaoBeans) new SelecaoBeans().toBeans(selecao);

@@ -55,6 +55,16 @@
 				<c:set var="titulo" value="Início"></c:set>
 				<c:set var="categoria" value=""></c:set>
 			</c:if>
+			
+			<c:if test="${fn:contains(titulo, 'emedicao')}">
+				<c:set var="titulo" value="Em edição"></c:set>
+				<c:set var="categoria" value=""></c:set>
+			</c:if>
+			
+			<c:if test="${fn:contains(categoria, 'minhas_Selecoes')}">
+				<c:set var="titulo" value="Minhas Seleções"></c:set>
+				<c:set var="categoria" value=""></c:set>
+			</c:if>
 
 			<c:set var="titulo"
 				value="${fn:replace(titulo, 'Selecoes', 'Seleções')}"></c:set>

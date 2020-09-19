@@ -5,6 +5,8 @@
  */
 package br.ufc.russas.n2s.darwin.model;
 
+import static org.junit.Assert.assertFalse;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -16,6 +18,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Fetch;
@@ -46,6 +50,11 @@ public class UsuarioDarwin implements Serializable {
     @Fetch(FetchMode.SUBSELECT)
     private List<EnumPermissao> permissoes;
     private boolean recebeEmail;
+    
+    @OneToOne
+    @JoinColumn(name = "codUsuarioControleDeAcesso", referencedColumnName = "id_pessoa_usuario",insertable = false,updatable = false)	
+    private VoAlunoCurso voAlunoCurso;
+    
 
     public long getCodUsuario() {
         return codUsuario;
@@ -109,7 +118,15 @@ public class UsuarioDarwin implements Serializable {
     	this.recebeEmail = recebeEmail;
     }
     
-    public UsuarioDarwin adicionaNivel(UsuarioDarwin usuario, EnumPermissao permissao) throws IllegalAccessException{
+    public VoAlunoCurso getVoAlunoCurso() {
+		return voAlunoCurso;
+	}
+
+	public void setVoAlunoCurso(VoAlunoCurso voAlunoCurso) {
+		this.voAlunoCurso = voAlunoCurso;
+	}
+
+	public UsuarioDarwin adicionaNivel(UsuarioDarwin usuario, EnumPermissao permissao) throws IllegalAccessException{
         if (!usuario.getPermissoes().contains(permissao)) {
             usuario.getPermissoes().add(permissao);
             return usuario;

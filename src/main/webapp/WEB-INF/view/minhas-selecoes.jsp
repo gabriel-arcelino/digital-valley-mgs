@@ -39,54 +39,181 @@
                         </button>
                     </div>
                 </c:if>                       
-                    <h1>Início</h1>
-                <c:forEach var="selecao" begin="0" end="4" items="${novasSelecoes}">
-                    <div class="card">
-                        <div class="card-body">
-                            <h2 class="card-title text-uppercase font-weight-bold">
-                                ${selecao.titulo}
-                            </h2>
-                            <h3 class="card-subtitle mb-2 text-muted">
-                            	<c:if test="${selecao.inscricao.periodo.dataTermino >= agora}">
-                            	dasddasd
-                            		${agora }
-	                                ${selecao.inscricao.titulo} - 
-	                                <b>${selecao.inscricao.periodo.dataInicio}</b>
-	                                até 
-	                                <b>${selecao.inscricao.periodo.dataTermino}</b>
-                                </c:if>
-                                <c:if test="${selecao.inscricao.periodo.dataTermino < agora}">
-                                dasdsasds
-                                	${etapasAtuais[selecao].titulo} - 
-	                                <b>${etapasAtuais[selecao].periodo.dataInicio}</b>
-	                                até 
-	                                <b>${etapasAtuais[selecao].periodo.dataTermino}</b>
-                                </c:if>
-                            </h3>
-                            <p class="card-text text-justify">
-                                ${fn:substring(selecao.descricao, 0, 400)}
-                                <c:if test="${fn:length(selecao.descricao) > 400}">
+                <c:if test="${fn:contains(categoria, 'estado')}">
+					<c:set var="titulo" value="${fn:replace(categoria, '/', ' ')}"></c:set>
+					<c:set var="titulo" value="${fn:substringAfter(titulo, 'estado')}"></c:set>
+					<c:set var="titulo" value="${fn:substringAfter(titulo, ' ')}"></c:set>
+				</c:if>
+
+			<c:if test="${fn:contains(categoria, 'categoria')}">
+				<c:set var="titulo" value="${fn:replace(categoria, '_', ' ')}"></c:set>
+				<c:set var="titulo" value="${fn:replace(titulo, '/', ' ')}"></c:set>
+				<c:set var="titulo"
+					value="${fn:substringAfter(titulo, 'categoria')}"></c:set>
+				<c:set var="titulo" value="${fn:substringAfter(titulo, ' ')}"></c:set>
+			</c:if>
+
+			<c:if test="${fn:contains(categoria, 'Início')}">
+				<c:set var="titulo" value="Início"></c:set>
+				<c:set var="categoria" value=""></c:set>
+			</c:if>
+			
+			
+			<c:if test="${fn:contains(categoria, 'minhas_Selecoes')}">
+				<c:set var="titulo" value="Minhas Seleções"></c:set>
+				<c:set var="categoria" value=""></c:set>
+			</c:if>
+               <div class="row col-sm-12">
+					<h1 class="text-capitalize">${titulo}</h1>
+					<c:if test="${not empty estado}">
+						<div class="dropdown right"
+							style="right: -13px; position: absolute;">
+							<button class="btn dropdown-toggle btn-sm btn-icon filtro_tela"
+								type="button" id="dropdownMenuButton" data-toggle="dropdown"
+								aria-haspopup="true" aria-expanded="false">
+								<i class="material-icons">filter_list</i> <span>Filtrar</span>
+							</button>
+							<div class="dropdown-menu dropdown-menu-right"
+								aria-labelledby="dropdownMenuButton">
+								<a class="dropdown-item"
+									href="${pageContext.request.contextPath}/minhas_Selecoes">Todas as
+									seleções</a>
+								<a class="dropdown-item" href="${pageContext.request.contextPath}/minhaSelecoes/estado/emedicao">Seleções
+										em edição</a>
+								
+								<a class="dropdown-item"
+									href="${pageContext.request.contextPath}/minhaSelecoes/estado/aberta">Seleções
+									abertas</a> <a class="dropdown-item"
+									href="${pageContext.request.contextPath}/minhaSelecoes/estado/andamento">Seleções
+									em andamento</a> <a class="dropdown-item"
+									href="${pageContext.request.contextPath}/minhaSelecoes/estado/finalizada">Seleções
+									finalizadas</a>
+							</div>
+						</div>
+					</c:if>
+				</div>
+				<form method="get"
+					action="${pageContext.request.contextPath}/pesquisa">
+					<div class="center">
+						<div class="input-group mb-3" style="padding-top: 5px;">
+
+							<input type="text" style="text-align: center;"
+								class="form-control" placeholder="Pesquisar seleções por nome"
+								name="titulo" aria-describedby="basic-addon2">
+							<div class="input-group-append">
+								<button type="submit" class="btn btn-outline-primary">
+									<i class="fas fa-search"></i> Pesquisar
+								</button>
+							</div>
+
+						</div>
+					</div>
+				</form>
+				<c:if test="${empty selecoes}">
+					<p class="text-muted">Nenhuma seleção cadastrada!</p>
+				</c:if>
+				<c:set var="pagina"
+					value="${(((not empty param.pag) and (param.pag >= 1)) ? param.pag : 1)}"></c:set>
+
+				<c:forEach var="selecao" items="${selecoes}">
+					<div class="card">
+						<div class="card-body">
+							<div class="row" style="padding-left: 13px;">
+								<h2 class="card-title text-uppercase font-weight-bold">
+									${selecao.titulo}</h2>
+								<c:if test="${selecao.estado.estado == 0}">
+									<span class="badge badge-pill badge-danger"
+										style="right: 20px; font-size: 10px; position: absolute;">Em
+										edição</span>
+								</c:if>
+								<c:if test="${selecao.estado.estado == 1}">
+									<span class="badge badge-pill badge-warning"
+										style="right: 20px; font-size: 10px; position: absolute;">Em
+										espera</span>
+								</c:if>
+								<c:if test="${selecao.estado.estado == 2}">
+									<span class="badge badge-pill badge-primary"
+										style="right: 20px; font-size: 10px; position: absolute;">Aberta</span>
+								</c:if>
+								<c:if test="${selecao.estado.estado == 3}">
+									<span class="badge badge-pill badge-info"
+										style="right: 20px; font-size: 10px; position: absolute;">Em
+										andamento</span>
+								</c:if>
+								<c:if test="${selecao.estado.estado == 4}">
+									<span class="badge badge-pill badge-dark"
+										style="right: 20px; font-size: 10px; position: absolute;">Finalizada</span>
+								</c:if>
+
+
+							</div>
+							<h3 class="card-subtitle mb-2 text-muted">
+								<c:set var="codSelecao" value="${selecao.codSelecao}" />
+								<c:out value="${etapasAtuais[codSelecao+0].titulo}" />
+								- <b>${etapasAtuais[codSelecao].periodo.dataInicio}</b> até <b>${etapasAtuais[codSelecao].periodo.dataTermino}</b>
+							</h3>
+							<p class="card-text text-justify">
+								${fn:substring(selecao.descricao, 0, 400)}
+								<c:if test="${fn:length(selecao.descricao) > 400}">
                                     [...]
                                 </c:if>
-                            </p>
-                            <a href="selecao?codSelecao=${selecao.codSelecao}" class="card-link">Inscrever-se</a>
-                        </div>
-                    </div>
-                </c:forEach>
+							</p>
+							<c:set var="nomeUrl" value="${selecao.titulo}" />
+							<a
+								href="${pageContext.request.contextPath}/selecao/${selecao.codSelecao}"
+								class="card-link">Mais informações</a>
+						</div>
+					</div>
+				</c:forEach>
                     <br>
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-center">
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#" tabindex="-1">Previous</a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">Next</a>
-                            </li>
-                        </ul>
-                    </nav>
+                    <nav aria-label=""> <c:if test="${titulo eq 'Início'}">
+					<c:set value="" var="categoria"></c:set>
+				</c:if> <c:if test="${titulo eq 'Minhas Seleções'}">
+					<c:set value="minhas_Selecoes" var="categoria"></c:set>
+				</c:if> <c:set var="pag"
+					value="${(fn:contains(categoria, '?') ? '': '?')}pag=" />
+
+				<ul class="pagination justify-content-center">
+					<li class="page-item ${pagina <= 1 ? "disabled" : ""}"><a
+						class="page-link"
+						href="${pageContext.request.contextPath}/${categoria}${pag}${pagina - 1}"
+						tabindex="-1">Anterior</a></li>
+
+					<c:set var="qtdPaginas"
+						value="${(qtdSelecoes/5) + (qtdSelecoes%5 == 0 ? 0 : 1)}"></c:set>
+					<c:set var="aux" value="0"></c:set>
+
+					<c:forEach var="i" begin="${(pagina - 8) > 0 ? pagina - 8 : 1}"
+						end="${(pagina + 8) <= qtdPaginas ? pagina + 8 : qtdPaginas }">
+						<c:if test="${i < pagina}">
+							<c:if test="${(pagina == qtdPaginas - aux) or (i >= pagina - 4)}">
+								<c:set var="aux" value="${aux+1}"></c:set>
+								<li class="page-item"><a class="page-link"
+									href="${pageContext.request.contextPath}/${categoria}${pag}${i}">${i}</a></li>
+							</c:if>
+						</c:if>
+						<c:if test="${pagina eq i}">
+							<li class="page-item ${pagina == i ? "active": ""}"><a
+								class="page-link"
+								href="${pageContext.request.contextPath}/${categoria}${pag}${i}">${i}</a></li>
+							<c:set var="aux" value="${8}"></c:set>
+						</c:if>
+						<c:if test="${i > pagina}">
+							<c:if test="${(i <= pagina + 4) or (pagina <= aux)}">
+								<c:set var="aux" value="${aux-1}"></c:set>
+								<li class="page-item"><a class="page-link"
+									href="${pageContext.request.contextPath}/${categoria}${pag}${i}">${i}</a></li>
+							</c:if>
+						</c:if>
+					</c:forEach>
+
+					<li class="page-item ${pagina >= qtdSelecoes/5 ? "disabled" : ""}">
+						<a class="page-link"
+						href="${pageContext.request.contextPath}/${categoria}${pag}${pagina + 1}">Próximo</a>
+					</li>
+				</ul>
+
+				</nav>
                 </div>
             </div>
         </div>

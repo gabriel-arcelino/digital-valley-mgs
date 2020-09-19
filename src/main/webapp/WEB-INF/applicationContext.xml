@@ -47,7 +47,7 @@
 		<property name="jpaProperties">
 			<props>
 				<prop key="hibernate.show_sql">true</prop>
-				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.hbm2ddl.auto">validate</prop>
 			</props>
 		</property>
 		<property name="persistenceProvider">
@@ -71,6 +71,7 @@
                 <value>br.ufc.russas.n2s.darwin.model.Selecao</value>
                 <value>br.ufc.russas.n2s.darwin.model.Log</value>
                 <value>br.ufc.russas.n2s.darwin.model.Recurso</value>
+				<value>br.ufc.russas.n2s.darwin.model.VoAlunoCurso</value>
             </list>
         </property>        
         <property name="configLocation">

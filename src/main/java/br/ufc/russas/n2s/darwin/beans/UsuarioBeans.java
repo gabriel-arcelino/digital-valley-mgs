@@ -2,6 +2,7 @@ package br.ufc.russas.n2s.darwin.beans;
 
 import br.ufc.russas.n2s.darwin.model.EnumPermissao;
 import br.ufc.russas.n2s.darwin.model.UsuarioDarwin;
+import br.ufc.russas.n2s.darwin.model.VoAlunoCurso;
 
 import java.io.Serializable;
 import java.util.List;
@@ -21,6 +22,9 @@ public class UsuarioBeans implements Beans, Serializable{
     private String CPF;
     private List<EnumPermissao> permissoes;
     private boolean recebeEmail;
+    
+    private VoAlunoCurso voAlunoCurso;
+      
     
     public long getCodUsuario() {
         return codUsuario;
@@ -79,7 +83,15 @@ public class UsuarioBeans implements Beans, Serializable{
 		this.CPF = CPF;
 	}
     
-    @Override
+    public VoAlunoCurso getVoAlunoCurso() {
+		return voAlunoCurso;
+	}
+
+	public void setVoAlunoCurso(VoAlunoCurso voAlunoCurso) {
+		this.voAlunoCurso = voAlunoCurso;
+	}
+
+	@Override
     public Object toBusiness() {
         UsuarioDarwin usuario = new UsuarioDarwin();
         if (this.getCodUsuario() > 0) {
@@ -93,6 +105,7 @@ public class UsuarioBeans implements Beans, Serializable{
         usuario.setPermissoes(this.getPermissoes());
         usuario.setRecebeEmail(this.isRecebeEmail());
         usuario.setCPF(this.getCPF());
+        usuario.setVoAlunoCurso(this.getVoAlunoCurso());
         return usuario;
     }
 
@@ -108,6 +121,7 @@ public class UsuarioBeans implements Beans, Serializable{
                 this.setEmail(usuario.getEmail());
                 this.setRecebeEmail(usuario.isRecebeEmail());
                 this.setCPF(usuario.getCPF());
+                this.setVoAlunoCurso(usuario.getVoAlunoCurso());
                 return this;
             } else {
                 throw new IllegalArgumentException("Isso não é um usuário!");

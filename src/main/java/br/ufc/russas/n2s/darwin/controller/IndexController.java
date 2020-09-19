@@ -176,6 +176,46 @@ public class IndexController {
         return "index";
     }
     
+    @RequestMapping(value = "/minhaSelecoes/estado/{estado}", method = RequestMethod.GET)
+    public String minhaSelecoesGetEstados(@RequestParam(required=false, defaultValue = "0") int pag, Model model, @PathVariable String estado, HttpServletRequest request){
+        EnumEstadoSelecao e = null;
+
+        if(estado.equals("emedicao")){
+        	e = EnumEstadoSelecao.EMEDICAO;
+        	model.addAttribute("categoria", "estado/" + estado);
+        } else if (estado.equals("aberta")){
+            e = EnumEstadoSelecao.ABERTA;
+            model.addAttribute("categoria", "estado/" + estado);
+        } else if( estado.equals("andamento")) {
+            e = EnumEstadoSelecao.ANDAMENTO;
+            model.addAttribute("categoria", "estado/" + estado);
+        } else if (estado.equals("finalizada")) {
+            e = EnumEstadoSelecao.FINALIZADA;
+            model.addAttribute("categoria", "estado/" + estado);
+        } else {
+        	 e = EnumEstadoSelecao.ESPERA;
+             model.addAttribute("categoria", "estado/espera");
+        }
+        HttpSession session = request.getSession();
+        UsuarioBeans usuario = (UsuarioBeans) session.getAttribute("usuarioDarwin");
+        List<SelecaoBeans> selecoes = null;
+        Long qtdSelecoes;
+        
+        selecoes = this.getSelecaoServiceIfc().listaSelecoes(true, null, e, ((pag - 1) * 5), 5);
+        qtdSelecoes = this.getSelecaoServiceIfc().getQuantidade(true, null, e);
+        
+        HashMap<Long, EtapaBeans> etapasAtuais = new  HashMap<>();
+        for (SelecaoBeans s : selecoes) {
+            etapasAtuais.put(s.getCodSelecao(), this.getSelecaoServiceIfc().getEtapaAtual(s));
+        }
+        
+        model.addAttribute("estado", "estado");
+        model.addAttribute("selecoes", selecoes);
+        model.addAttribute("etapasAtuais", etapasAtuais);
+        model.addAttribute("qtdSelecoes", qtdSelecoes);
+        return "minhas-selecoes";
+    }
+    
     @RequestMapping(value="/minhas_Selecoes", method = RequestMethod.GET)
     public String getMinhasSelecoes(@RequestParam(required=false, defaultValue = "1") int pag, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
@@ -198,12 +238,13 @@ public class IndexController {
         }
         
         model.addAttribute("qtdSelecoes", qtdSelecoes);
+        model.addAttribute("estado", "início");
         model.addAttribute("categoria", "minhas_Selecoes");
         model.addAttribute("selecoes", selecoes);
         model.addAttribute("agora", LocalDate.now());
         LocalDate.now().toEpochDay();
         model.addAttribute("etapasAtuais", etapasAtuais);
-        return "index";
+        return "minhas-selecoes";
     }
     
     @RequestMapping(value = "/sair", method = RequestMethod.GET)

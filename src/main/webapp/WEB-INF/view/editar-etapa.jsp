@@ -84,14 +84,14 @@
 						placeholder="Digite um título para a etapa" required> <br>
 					<label for="descricaoInput"> Descrição*</label>
 					<c:if test="${etapa.estado ne 'ESPERA'}">
-						<textarea class="form-control" name="descricao" rows="15"
+						<textarea class="form-control" name="descricao" rows="6"
 							placeholder="Digite uma breve descrição sobre a etapa" required
-							disabled>${etapa.descricao}</textarea>
+							disabled style="line-height:4">${etapa.descricao}</textarea>
 					</c:if>
 					<c:if test="${etapa.estado eq 'ESPERA'}">
 						<textarea class="form-control" name="descricao"
 							id="descricaoInput"
-							placeholder="Digite uma breve descrição sobre a etapa" required>${etapa.descricao}</textarea>
+							placeholder="Digite uma breve descrição sobre a etapa" required style="line-height:4">${etapa.descricao}</textarea>
 					</c:if>
 
 					<c:if test="${tipo eq 'etapa'}">
@@ -431,8 +431,7 @@
 								<div class="modal-footer">
 									<button type="button" class="btn btn-secondary btn-sm"
 										data-dismiss="modal">Cancelar</button>
-									<button type="submit" class="btn btn-primary btn-sm"
-										onclick="verificarDescricao()">Confirmar</button>
+									<button type="submit" class="btn btn-primary btn-sm">Confirmar</button>
 								</div>
 							</div>
 						</div>
@@ -674,6 +673,7 @@
 		function removeCampoNotaMinima() {
 			document.getElementById("campoNotaMinima").innerHTML = "";
 		}
+		/*
 		function verificarDescricao() {
 			let descricao_div = document.getElementsByClassName('cazary')[0];
 
@@ -689,19 +689,11 @@
 				}
 
 			}
-		}
+		}*/
 	</script>
 	<script
-		src="${pageContext.request.contextPath}/resources/js/cazary.min.js"></script>
-	<script type="text/javascript">
-		(function($, window) {
-			$(function($) {
-				$("textarea#descricaoInput").cazary({
-					commands : "FULL"
-				});
-
-			});
-		})(jQuery, window);
+		src="${pageContext.request.contextPath}/resources/js/cazary.min.js">
 	</script>
+
 </body>
 </html>

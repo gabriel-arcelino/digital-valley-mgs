@@ -6,6 +6,7 @@ import br.ufc.russas.n2s.darwin.beans.SelecaoBeans;
 import br.ufc.russas.n2s.darwin.beans.UsuarioBeans;
 import br.ufc.russas.n2s.darwin.model.EnumCriterioDeAvaliacao;
 import br.ufc.russas.n2s.darwin.model.EnumEstadoEtapa;
+import br.ufc.russas.n2s.darwin.model.EnumPermissao;
 import br.ufc.russas.n2s.darwin.service.EtapaServiceIfc;
 import br.ufc.russas.n2s.darwin.service.UsuarioServiceIfc;
 import java.time.LocalDate;
@@ -55,12 +56,15 @@ public class EtapaController {
     
     
     @RequestMapping(value = "/{codEtapa}", method = RequestMethod.GET)
-    public String getIndex(@PathVariable long codEtapa, Model model){
+    public String getIndex(@PathVariable long codEtapa, Model model, HttpServletRequest request){
+    	UsuarioBeans usuario = (UsuarioBeans) request.getSession().getAttribute("usuarioDarwin");
+    	if( usuario.getPermissoes().contains(EnumPermissao.ADMINISTRADOR)) {
         EtapaBeans etapa  = etapaServiceIfc.getEtapa(codEtapa);
         model.addAttribute("etapa", etapa);
         List<UsuarioBeans> avaliadores = this.getUsuarioServiceIfc().listaTodosUsuarios();
         model.addAttribute("avaliadores", avaliadores);
         return "/editar-etapa";
+    	}else {return "error/404";}
     }
     
     @RequestMapping(value = "/{codEtapa}",method = RequestMethod.POST)
