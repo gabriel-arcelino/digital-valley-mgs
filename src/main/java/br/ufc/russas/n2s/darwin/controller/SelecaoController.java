@@ -33,6 +33,7 @@ import br.ufc.russas.n2s.darwin.model.Selecao;
 import br.ufc.russas.n2s.darwin.model.UsuarioDarwin;
 import br.ufc.russas.n2s.darwin.service.EtapaServiceIfc;
 import br.ufc.russas.n2s.darwin.service.LogServiceIfc;
+import br.ufc.russas.n2s.darwin.service.ParticipanteServiceIfc;
 import br.ufc.russas.n2s.darwin.service.SelecaoServiceIfc;
 
 /**
@@ -199,7 +200,7 @@ public class SelecaoController {
 		Collections.sort(selecao.getInscricao().getParticipantes());
 		if ((selecao.getResponsaveis().contains(usuario))
 				|| (usuario.getPermissoes().contains(EnumPermissao.ADMINISTRADOR))) {
-			model.addAttribute("selecao", selecao);
+			model.addAttribute("selecao", selecao); 
 			model.addAttribute("participantesEtapa",
 					(selecao.getInscricao() != null ? selecao.getInscricao().getParticipantes() : new ArrayList<>()));
 			return "participantes";

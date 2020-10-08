@@ -81,7 +81,7 @@
 					<div class="invalid-feedback"></div>
 					<br> <label for="descricaoInput">Descrição*</label>
 					<textarea class="form-control" name="descricao" id="descricaoInput"
-						placeholder="Digite uma breve descrição sobre a etapa" required style="line-height:4">${etapa.descricao}</textarea>
+						placeholder="Digite uma breve descrição sobre a etapa" required>${etapa.descricao}</textarea>
 					<div class="invalid-feedback"></div>
 					<br>
 
@@ -498,38 +498,10 @@
 		}
 		
 		function verificaAvaliador(){
-			if(listaAvaliadores.length > 0 && verificarDescricao()){
+			if(listaAvaliadores.length > 0){
 				document.getElementById("save").disabled = false;
 			}else{
 				document.getElementById("save").disabled = true;
-			}
-		}
-		
-		function verificaTitulo(){
-			var titulo = document.getElementById("tituloInput").value;
-			if(titulo !== ""){
-				return true;
-			}else{
-				return false;
-			}
-		}
-		
-		function verificaData(){
-			var dataInicio = document.getElementById("dataInicioInput").value;
-			var dataFinal = document.getElementById("dataTerminoInput").value;
-			if (dataInicio !== "" && dataFinal !== ""){
-				return true;
-			}else{
-				return false;	
-			}
-		}
-		
-		function verificaEtapaAnterior(){
-			var etapaAnterior = document.getElementById("etapaAnteriorInput").value;
-			if(etapaAnterior !== ""){
-				return true
-			}else{
-				return false
 			}
 		}
 
@@ -554,6 +526,22 @@
 			document.getElementById("campoNotaMinima").innerHTML = "";
 		}
 
+		function verificarDescricao() {
+			let descricao_div = document.getElementsByClassName('cazary')[0];
+
+			if (descricao_div != undefined) {
+				let frame = descricao_div.getElementsByTagName('iframe')[0];
+
+				if (frame.contentDocument.getElementsByClassName('empty').length == 1
+						|| frame.contentDocument.getElementsByTagName('body')[0].textContent.length === 0) {
+					descricao_div.setAttribute('style', 'border-color: red');
+					frame.contentDocument.getElementsByTagName('body')[0].className = 'empty';
+				} else {
+					descricao_div.setAttribute('style', '');
+				}
+
+			}
+		}
 
 		function limparTextAreaDescricao() {
 			let descricao_div = document.getElementsByClassName('cazary')[0];
@@ -564,6 +552,15 @@
 	</script>
 	<script
 		src="${pageContext.request.contextPath}/resources/js/cazary.min.js">
+	</script>
+	<script type="text/javascript">
+		(function($, window) {
+			$(function($) {
+				$("textarea#descricaoInput").cazary({
+					commands : "FULL"
+				});
+			});
+		})(jQuery, window);
 	</script>
 
 </body>

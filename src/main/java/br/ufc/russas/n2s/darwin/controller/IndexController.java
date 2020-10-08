@@ -101,6 +101,8 @@ public class IndexController {
         return "index";
     }
     
+    
+    
     @RequestMapping(value="/pesquisa", method = {RequestMethod.POST, RequestMethod.GET})
     public String getPorTitulo(	@RequestParam(required=false, defaultValue = "0") int pag,
     							@RequestParam(required=false, defaultValue = " ") String titulo,
@@ -129,6 +131,40 @@ public class IndexController {
         model.addAttribute("selecoes", selecoes);
         model.addAttribute("etapasAtuais", etapasAtuais); 
         return "index";
+    }
+    
+    @RequestMapping(value="/minhasSelecoes/pesquisa", method = {RequestMethod.POST, RequestMethod.GET})
+    public String MinhasSelecoesgetPorTitulo(	@RequestParam(required=false, defaultValue = "0") int pag,
+    							@RequestParam(required=false, defaultValue = " ") String titulo,
+    							Model model, HttpServletRequest request) {
+    	
+    	this.getSelecaoServiceIfc().setUsuario((UsuarioBeans)request.getSession().getAttribute("usuarioDarwin"));
+    	HttpSession session = request.getSession();
+        UsuarioBeans usuario = (UsuarioBeans) session.getAttribute("usuarioDarwin");
+        List<SelecaoBeans> selecoes = null;
+        Long qtdSelecoes;
+        
+        if(usuario.getPermissoes().contains(EnumPermissao.ADMINISTRADOR)) {
+        	selecoes = this.getSelecaoServiceIfc().buscarSelecoesPorNome(true, titulo, ((pag - 1) * 5), 5) ;
+        	qtdSelecoes = this.getSelecaoServiceIfc().getQuantidadePorNome(true, titulo);
+        }else {
+        	if(pag <= 0){pag = 1;}
+        	selecoes = this.getSelecaoServiceIfc().buscarSelecoesPorNomeAssociado(titulo,usuario.getCodUsuario(),((pag - 1) * 5), 5) ;
+        	qtdSelecoes = this.getSelecaoServiceIfc().getQuantidadePorNomeAssociado(titulo,usuario.getCodUsuario());
+        }
+        
+        
+        
+        HashMap<Long, EtapaBeans> etapasAtuais = new  HashMap<>();
+        for (SelecaoBeans s : selecoes) {
+            etapasAtuais.put(s.getCodSelecao(), this.getSelecaoServiceIfc().getEtapaAtual(s));
+        }
+        
+        model.addAttribute("categoria", "pesquisa/?titulo=" + titulo + "&");
+        model.addAttribute("qtdSelecoes", qtdSelecoes);
+        model.addAttribute("selecoes", selecoes);
+        model.addAttribute("etapasAtuais", etapasAtuais); 
+        return "minhas-selecoes";
     }
     
     
@@ -176,8 +212,8 @@ public class IndexController {
         return "index";
     }
     
-    @RequestMapping(value = "/minhaSelecoes/estado/{estado}", method = RequestMethod.GET)
-    public String minhaSelecoesGetEstados(@RequestParam(required=false, defaultValue = "0") int pag, Model model, @PathVariable String estado, HttpServletRequest request){
+    @RequestMapping(value = "/minhasSelecoes/estado/{estado}", method = RequestMethod.GET)
+    public String MinhasSelecoesGetEstados(@RequestParam(required=false, defaultValue = "0") int pag, Model model, @PathVariable String estado, HttpServletRequest request){
         EnumEstadoSelecao e = null;
 
         if(estado.equals("emedicao")){
@@ -200,9 +236,16 @@ public class IndexController {
         UsuarioBeans usuario = (UsuarioBeans) session.getAttribute("usuarioDarwin");
         List<SelecaoBeans> selecoes = null;
         Long qtdSelecoes;
+       
+        if (usuario.getPermissoes().contains(EnumPermissao.ADMINISTRADOR)) {
+        	selecoes = this.getSelecaoServiceIfc().listaSelecoes(true, null, e, ((pag - 1) * 5), 5);
+        	qtdSelecoes = this.getSelecaoServiceIfc().getQuantidade(true, null, null);
+        } else {
+        	if(pag <= 0){pag = 1;}
+        	selecoes = this.getSelecaoServiceIfc().buscarSelecoesAssociadasPorEstado(usuario, ((pag - 1) * 5), 5,e);
+        	qtdSelecoes = this.getSelecaoServiceIfc().getQuantidadeAssociada(usuario);
+        }
         
-        selecoes = this.getSelecaoServiceIfc().listaSelecoes(true, null, e, ((pag - 1) * 5), 5);
-        qtdSelecoes = this.getSelecaoServiceIfc().getQuantidade(true, null, e);
         
         HashMap<Long, EtapaBeans> etapasAtuais = new  HashMap<>();
         for (SelecaoBeans s : selecoes) {
@@ -216,7 +259,9 @@ public class IndexController {
         return "minhas-selecoes";
     }
     
-    @RequestMapping(value="/minhas_Selecoes", method = RequestMethod.GET)
+   
+    
+    @RequestMapping(value="/minhasSelecoes/minhas_Selecoes", method = RequestMethod.GET)
     public String getMinhasSelecoes(@RequestParam(required=false, defaultValue = "1") int pag, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         UsuarioBeans usuario = (UsuarioBeans) session.getAttribute("usuarioDarwin");

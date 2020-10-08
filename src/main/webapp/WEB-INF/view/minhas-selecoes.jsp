@@ -59,6 +59,7 @@
 			</c:if>
 			
 			
+			
 			<c:if test="${fn:contains(categoria, 'minhas_Selecoes')}">
 				<c:set var="titulo" value="Minhas Seleções"></c:set>
 				<c:set var="categoria" value=""></c:set>
@@ -76,24 +77,25 @@
 							<div class="dropdown-menu dropdown-menu-right"
 								aria-labelledby="dropdownMenuButton">
 								<a class="dropdown-item"
-									href="${pageContext.request.contextPath}/minhas_Selecoes">Todas as
+									href="${pageContext.request.contextPath}/minhasSelecoes/minhas_Selecoes">Todas as
 									seleções</a>
-								<a class="dropdown-item" href="${pageContext.request.contextPath}/minhaSelecoes/estado/emedicao">Seleções
+								<c:if test="${fn:contains(sessionScope.usuarioDarwin.permissoes, 'ADMINISTRADOR')}">
+								<a class="dropdown-item" href="${pageContext.request.contextPath}/minhasSelecoes/estado/emedicao">Seleções
 										em edição</a>
-								
+								</c:if>
 								<a class="dropdown-item"
-									href="${pageContext.request.contextPath}/minhaSelecoes/estado/aberta">Seleções
+									href="${pageContext.request.contextPath}/minhasSelecoes/estado/aberta">Seleções
 									abertas</a> <a class="dropdown-item"
-									href="${pageContext.request.contextPath}/minhaSelecoes/estado/andamento">Seleções
+									href="${pageContext.request.contextPath}/minhasSelecoes/estado/andamento">Seleções
 									em andamento</a> <a class="dropdown-item"
-									href="${pageContext.request.contextPath}/minhaSelecoes/estado/finalizada">Seleções
+									href="${pageContext.request.contextPath}/minhasSelecoes/estado/finalizada">Seleções
 									finalizadas</a>
 							</div>
 						</div>
 					</c:if>
 				</div>
 				<form method="get"
-					action="${pageContext.request.contextPath}/pesquisa">
+					action="${pageContext.request.contextPath}/minhasSelecoes/pesquisa">
 					<div class="center">
 						<div class="input-group mb-3" style="padding-top: 5px;">
 
@@ -176,7 +178,7 @@
 				<ul class="pagination justify-content-center">
 					<li class="page-item ${pagina <= 1 ? "disabled" : ""}"><a
 						class="page-link"
-						href="${pageContext.request.contextPath}/${categoria}${pag}${pagina - 1}"
+						href="${pageContext.request.contextPath}/minhasSelecoes/${categoria}${pag}${pagina - 1}"
 						tabindex="-1">Anterior</a></li>
 
 					<c:set var="qtdPaginas"
@@ -189,27 +191,27 @@
 							<c:if test="${(pagina == qtdPaginas - aux) or (i >= pagina - 4)}">
 								<c:set var="aux" value="${aux+1}"></c:set>
 								<li class="page-item"><a class="page-link"
-									href="${pageContext.request.contextPath}/${categoria}${pag}${i}">${i}</a></li>
+									href="${pageContext.request.contextPath}/minhasSelecoes/${categoria}${pag}${i}">${i}</a></li>
 							</c:if>
 						</c:if>
 						<c:if test="${pagina eq i}">
 							<li class="page-item ${pagina == i ? "active": ""}"><a
 								class="page-link"
-								href="${pageContext.request.contextPath}/${categoria}${pag}${i}">${i}</a></li>
+								href="${pageContext.request.contextPath}/minhasSelecoes/${categoria}${pag}${i}">${i}</a></li>
 							<c:set var="aux" value="${8}"></c:set>
 						</c:if>
 						<c:if test="${i > pagina}">
 							<c:if test="${(i <= pagina + 4) or (pagina <= aux)}">
 								<c:set var="aux" value="${aux-1}"></c:set>
 								<li class="page-item"><a class="page-link"
-									href="${pageContext.request.contextPath}/${categoria}${pag}${i}">${i}</a></li>
+									href="${pageContext.request.contextPath}/minhasSelecoes/${categoria}${pag}${i}">${i}</a></li>
 							</c:if>
 						</c:if>
 					</c:forEach>
 
 					<li class="page-item ${pagina >= qtdSelecoes/5 ? "disabled" : ""}">
 						<a class="page-link"
-						href="${pageContext.request.contextPath}/${categoria}${pag}${pagina + 1}">Próximo</a>
+						href="${pageContext.request.contextPath}/minhasSelecoes/${categoria}${pag}${pagina + 1}">Próximo</a>
 					</li>
 				</ul>
 

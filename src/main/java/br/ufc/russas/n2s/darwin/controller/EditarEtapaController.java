@@ -608,6 +608,7 @@ public class EditarEtapaController {
 					throw new Exception("Não existem avaliações para serem divulgadas!");
 				}
 				etapa.setDivulgaResultado(true);
+				etapa.setEstado(EnumEstadoEtapa.FINALIZADA);
 				etapa = etapaServiceIfc.atualizaEtapa(etapa);
 				List<Thread> threadsEmail = Collections.synchronizedList(new ArrayList<Thread>());
 				for (int i = 0; i < etapa.getParticipantes().size(); i++) {

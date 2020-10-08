@@ -76,7 +76,7 @@
 						<br> <label for="descricaoInput">Descrição*</label>
 						<textarea class="form-control" name="descricao"
 							id="descricaoInput"
-							placeholder="Digite uma breve descrição sobre a seleção" required style="line-height:4">${not (novaSelecao.descricao eq '') ? novaSelecao.descricao : ''}</textarea>
+							placeholder="Digite uma breve descrição sobre a seleção" required>${not (novaSelecao.descricao eq '') ? novaSelecao.descricao : ''}</textarea>
 						<div class="invalid-feedback"></div>
 						<br> <label for="preRequisitosInput">Pré Requisitos</label>
 						<textarea name="descricaoPreRequisitos" class="form-control"
@@ -245,7 +245,7 @@
 									<div class="modal-footer">
 										<button type="button" class="btn btn-secondary btn-sm"
 											data-dismiss="modal">Cancelar</button>
-										<button type="submit" class="btn btn-primary btn-sm">Confirmar</button>
+										<button type="submit" class="btn btn-primary btn-sm" onclick="verificarDescricao()">Confirmar</button>
 									</div>
 								</div>
 							</div>
@@ -283,7 +283,30 @@
 		src="${pageContext.request.contextPath}/resources/js/cazary.min.js"></script>
 	<script type="text/javascript">
 
+		(function($, window) {
+			$(function($) {
+				$("textarea#descricaoInput").cazary({
+					commands : "FULL"
+				});
+				$("textarea#preRequisitosInput").cazary({
+					commands : "FULL"
+				});
+			});
+		})(jQuery, window);
 		
+		function verificarDescricao() {
+			let descricao_div = document.getElementsByClassName('cazary')[0];
+			if (descricao_div != undefined) {
+				let frame = descricao_div.getElementsByTagName('iframe')[0];
+				if (frame.contentDocument.getElementsByClassName('empty').length == 1
+						|| frame.contentDocument.getElementsByTagName('body')[0].textContent.length === 0) {
+					frame.contentDocument.getElementsByTagName('body')[0].className = 'empty';
+					descricao_div.setAttribute('style', 'border-color: red');
+				} else {
+					descricao_div.setAttribute('style', '');
+				}
+			}
+		}
 			
 		$(function(){
 			$('[data-toggle="popover"]').popover()

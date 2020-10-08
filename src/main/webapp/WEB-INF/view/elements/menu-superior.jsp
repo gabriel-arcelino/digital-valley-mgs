@@ -21,7 +21,7 @@
             <c:set var="permissoes" value="${sessionScope.usuarioDarwin.permissoes}"></c:set>
             <a class="nav-item nav-link" href="${pageContext.request.contextPath}/">Início</a>
             <a class="nav-item nav-link" href="<%=Constantes.getAppGuardiaoUrl()%>">Guardião</a>
-            <a class="nav-item nav-link" href="${pageContext.request.contextPath}/minhas_Selecoes">Minhas seleções</a>
+            <a class="nav-item nav-link" href="${pageContext.request.contextPath}/minhasSelecoes/minhas_Selecoes">Minhas seleções</a>
             <c:if test="${fn:contains(permissoes, 'RESPONSAVEL') or fn:contains(permissoes, 'ADMINISTRADOR')}">
             <div class="btn-group">
                 <a href="" class="nav-item nav-link " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

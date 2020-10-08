@@ -380,6 +380,95 @@ public class SelecaoDAOImpl implements SelecaoDAOIfc {
         
         return qtd;
 	}
+	
+	@Override
+	public Long getQuantidadePorNomeAssociado(String titulo, Long usuario){
+		Session session =  this.daoImpl.getSessionFactory().openSession();
+        Transaction t = session.beginTransaction();
+        BigInteger qtd = new BigInteger("0");
+        long qtdTotal = 0;
+        try {
+	        Query qry;
+	    	
+	    	String sqlResponsavelSelecao = "select count(distinct s) " +
+											"from darwin.selecao as s " +
+											"inner join darwin.responsaveis_selecao as rs on (s.codselecao = rs.selecao) " +
+											"inner join darwin.usuario as u on (u.codusuario = rs.usuario) " +
+											"where u.codusuario = ? and s.deletada = 'false' and s.titulo ilike '%" + titulo + "%';";
+	    	
+	    	qry = session.createSQLQuery(sqlResponsavelSelecao).setLong(0, usuario);
+    													
+    	
+	    	try{
+	    		qtd = (BigInteger)qry.uniqueResult();
+	    		qtdTotal += qtd.longValue();
+	    	} catch(Exception e){
+	    		e.printStackTrace();
+	    	}
+	    	
+	    	String sqlParticipandoSelecao = "select count(distinct s) " +
+											"from darwin.selecao as s " +
+											"inner join darwin.etapa as e on (s.etapa_inscricao = e.codetapa) " + 
+											"inner join darwin.participantes_etapa as pe on (e.codetapa = pe.etapa) " + 
+											"inner join darwin.participante as p on (p.codparticipante = pe.participante) " +
+											"where p.candidato = ? and s.divulgada = 'true' and s.deletada = 'false' and s.titulo ilike '%" + titulo + "%';";
+
+
+	    	qry = session.createSQLQuery(sqlParticipandoSelecao).setLong(0, usuario);
+
+			try{
+				qtd = (BigInteger)qry.uniqueResult();
+				qtdTotal += qtd.longValue();
+			} catch(Exception e){
+				e.printStackTrace();
+			}
+			
+        	String sqlAvaliadorSelecaoEtapas = 	"select count(distinct s) " + 
+												"from darwin.selecao as s " +
+												"inner join darwin.etapa as et on (s.etapa_inscricao = et.codetapa) " +
+												"left join darwin.etapas_selecao as es on (es.selecao = s.codselecao) " +
+												"inner join darwin.avaliadores as ava on (et.codetapa = ava.etapa or es.etapa = ava.etapa) " +
+												"where ava.avaliador = ? and s.divulgada = 'true' and s.deletada = 'false' and s.titulo ilike '%" + titulo + "%';";
+        	
+        	qry = session.createSQLQuery(sqlAvaliadorSelecaoEtapas).setLong(0, usuario);
+        	
+        	try{
+        		qtd = (BigInteger)qry.uniqueResult();
+        		qtdTotal += qtd.longValue();
+        	} catch(Exception e){
+        		e.printStackTrace();
+        	}
+        	
+        	String sqlAvaliadorResponsavelSelecaoEtapas = "select count(distinct s) " + 
+															"from darwin.selecao as s " +
+															"inner join darwin.etapa as et on (s.etapa_inscricao = et.codetapa) " +
+															"left join darwin.etapas_selecao as es on (es.selecao = s.codselecao) " +
+															"inner join darwin.responsaveis_selecao as rs on (s.codselecao = rs.selecao) " +
+															"inner join darwin.avaliadores as ava on (et.codetapa = ava.etapa or es.etapa = ava.etapa) " +
+															"where ava.avaliador = ? and rs.usuario = ava.avaliador and s.divulgada = 'true' and s.deletada = 'false' and s.titulo ilike '%" + titulo + "%';";
+
+			qry = session.createSQLQuery(sqlAvaliadorResponsavelSelecaoEtapas).setLong(0, usuario);
+			
+			try{
+			qtd = (BigInteger)qry.uniqueResult();
+			qtdTotal -= qtd.longValue();
+			} catch(Exception e){
+			e.printStackTrace();
+			}
+        	
+        	t.commit();
+	    	
+	    	
+        } catch (RuntimeException ex) {
+            t.rollback();
+            throw ex;
+
+        } finally {
+            session.close();
+        }
+        
+        return qtdTotal;
+	}
 
 	@Override
 	public List<Selecao> buscarSelecoesAssociada(Long idUsuario, int inicio, int qtd) {
@@ -399,6 +488,27 @@ public class SelecaoDAOImpl implements SelecaoDAOIfc {
         }
         return selecoes;
 	}
+	
+	@Override
+	public List<Selecao> buscarSelecoesPorNomeAssociada(String titulo,Long idUsuario, int inicio, int qtd) {
+        List<Selecao> selecoes = new ArrayList<>();
+        try {
+            List<Long> ids = getListaSelecoesPorNomeAssociada(titulo, idUsuario);
+            int qtdPorPagina = 0;
+            for(int i = inicio; qtdPorPagina < qtd && i < ids.size(); i++){
+            	Selecao s = new Selecao();
+            	s.setCodSelecao(ids.get(i));
+            	selecoes.add(getSelecao(s));
+            	qtdPorPagina++;
+            }
+            
+        } catch(RuntimeException e) {
+        	throw e;
+        }
+        return selecoes;
+	}
+	
+	
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -497,6 +607,109 @@ public class SelecaoDAOImpl implements SelecaoDAOIfc {
         
         return selecoesTotal;
 	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Long> getListaSelecoesPorNomeAssociada(String titulo, Long idUsuario) {
+		Session session =  this.daoImpl.getSessionFactory().openSession();
+        Transaction t = session.beginTransaction();
+        List<Long> selecoesTotal = new ArrayList<>();
+        
+        try {
+        	Query qry;
+        	
+        	List<Long> selecoesResponsavel = new ArrayList<>();
+        	String sqlResponsavelSelecao = 	"select distinct s.codselecao " +
+											"from darwin.selecao as s " +
+											"inner join darwin.responsaveis_selecao as rs on (s.codselecao = rs.selecao) " +
+											"inner join darwin.usuario as u on (u.codusuario = rs.usuario) " +
+											"where u.codusuario = ? and s.deletada = 'false' and s.titulo ilike '%" + titulo + "%' ";
+        	
+        	qry = session.createSQLQuery(sqlResponsavelSelecao).setLong(0, idUsuario);
+        													
+        	
+        	try{
+        		List<Object> temp = qry.list();
+        		for(Object o : temp){
+        			selecoesResponsavel.add(new BigInteger(o.toString()).longValue()); 
+        		}
+        	} catch(Exception e){
+        		System.err.println("Sem resultados");
+        	}
+        	
+        	List<Long> selecoesParticipando = new ArrayList<>();
+        	String sqlParticipandoSelecao = "select distinct s.codselecao " +
+											"from darwin.selecao as s " +
+											"inner join darwin.etapa as e on (s.etapa_inscricao = e.codetapa) " + 
+											"inner join darwin.participantes_etapa as pe on (e.codetapa = pe.etapa) " + 
+											"inner join darwin.participante as p on (p.codparticipante = pe.participante) " +
+											"where p.candidato = ? and s.divulgada = 'true' and s.deletada = 'false' and s.titulo ilike '%" + titulo + "%'";
+        	
+        	
+        	qry = session.createSQLQuery(sqlParticipandoSelecao).setLong(0, idUsuario);
+        	
+        	
+        	try{
+        		List<Object> temp = qry.list();
+        		for(Object o : temp){
+        			selecoesParticipando.add(new BigInteger(o.toString()).longValue()); 
+        		}
+        	} catch(Exception e){
+        		System.err.println("Sem resultados");
+        	}
+        	
+        	List<Long> selecoesAvaliadores = new ArrayList<>();
+        	String sqlAvaliadorSelecaoEtapas = 	"select distinct s.codselecao " + 
+												"from darwin.selecao as s " +
+												"inner join darwin.etapa as et on (s.etapa_inscricao = et.codetapa) " +
+												"left join darwin.etapas_selecao as es on (es.selecao = s.codselecao) " +
+												"inner join darwin.avaliadores as ava on (et.codetapa = ava.etapa or es.etapa = ava.etapa) " +
+												"where ava.avaliador = ? and s.divulgada = 'true' and s.deletada = 'false' and s.titulo ilike '%" + titulo + "%'";
+        	
+        	qry = session.createSQLQuery(sqlAvaliadorSelecaoEtapas).setLong(0, idUsuario);
+        	
+        	
+        	try{
+        		List<Object> temp = qry.list();
+        		for(Object o : temp){
+        			selecoesAvaliadores.add(new BigInteger(o.toString()).longValue()); 
+        		}
+        	} catch(Exception e){
+        		System.err.println("Sem resultados");
+        	}
+        	
+        	for(int i = 0; i < selecoesAvaliadores.size(); i++){
+        		if(!selecoesTotal.contains(selecoesAvaliadores.get(i))){
+        			selecoesTotal.add(selecoesAvaliadores.get(i));
+        		}
+        	}
+        	for(int i = 0; i < selecoesParticipando.size(); i++){
+        		if(!selecoesTotal.contains(selecoesParticipando.get(i))){
+        			selecoesTotal.add(selecoesParticipando.get(i));
+        		}
+        	}
+        	for(int i = 0; i < selecoesResponsavel.size(); i++){
+        		if(!selecoesTotal.contains(selecoesResponsavel.get(i))){
+        			selecoesTotal.add(new BigDecimal(selecoesResponsavel.get(i)).longValue());
+        		}
+        	}
+        	
+        	Collections.sort(selecoesTotal, Collections.reverseOrder());
+        	
+            t.commit();
+            
+        } catch (RuntimeException ex) {
+            t.rollback();
+            throw ex;
+        } finally {
+            session.close();
+        }
+        
+        return selecoesTotal;
+	}
+	
+	
+	
 
 	@Override
 	public Selecao getSelecao(Long codEtapa) {

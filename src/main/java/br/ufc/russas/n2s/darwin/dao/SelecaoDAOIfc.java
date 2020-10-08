@@ -63,8 +63,13 @@ public interface SelecaoDAOIfc {
     public List<Selecao> buscarSelecoesPorNome(boolean isAdm, String titulo, int inicio, int qtd);
     public Long getQuantidadePorNome(boolean isAdm, String titulo);
     
+    
     public List<Selecao> buscarSelecoesAssociada(Long usuario, int inicio, int qtd);
     public List<Long> getListaSelecoesAssociada(Long usuario);
+    
+    public List<Selecao> buscarSelecoesPorNomeAssociada(String titulo, Long usuario, int inicio, int qtd);
+    public List<Long> getListaSelecoesPorNomeAssociada(String titulo, Long usuario);
+    public Long getQuantidadePorNomeAssociado(String titulo, Long usuario);
     
     public Selecao getSelecao(Long codEtapa);
 }

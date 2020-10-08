@@ -239,7 +239,7 @@ public class ParticiparEtapaController {
 					model.addAttribute("selecoes", selecoes);
 					model.addAttribute("etapasAtuais", etapasAtuais);
 					session.setAttribute("status", "success");
-					return "redirect:/minhas_Selecoes";
+					return "redirect:/minhasSelecoes/minhas_Selecoes";
 				} else {
 					throw new Exception(
 							"Você é avaliador de alguma das etapas desta seleção, por isso não é possível se inscrever!");
@@ -325,7 +325,7 @@ public class ParticiparEtapaController {
 			sendEmail.start();
 			session.setAttribute("mensagem", "Agora você está inscrito na etapa ".concat(etapa.getTitulo()));
 			session.setAttribute("status", "success");
-			response.sendRedirect(Constantes.getAppUrl() + "/minhas_Selecoes");
+			response.sendRedirect(Constantes.getAppUrl() + "/minhasSelecoes/minhas_Selecoes");
 		} catch (MultipartException e) {
 			session.setAttribute("mensagem", "O tamanho dos arquivos ultrapassa a capacidade de upload.");
 			session.setAttribute("status", "danger");
