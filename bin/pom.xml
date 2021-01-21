@@ -15,7 +15,6 @@
 		<java.version>1.8</java.version>
 	</properties>
 
-	<!-- 
 	<distributionManagement>
 		<repository>
 			<id>central</id>
@@ -28,12 +27,12 @@
 			<url>http://192.169.1.2:8081/artifactory/br.com.n2s</url>
 		</snapshotRepository>
 	</distributionManagement>
- 	-->
+
 	<dependencies>
 		<dependency>
 			<groupId>br.com.n2s</groupId>
-			<artifactId>digital-valley-core</artifactId>
-			<version>1.6.1-SNAPSHOT</version>
+			<artifactId>core.n2s</artifactId>
+			<version>1.6.1</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.dozer</groupId>
@@ -313,11 +312,11 @@
 		<profile>
 			<id>db</id>
 			<properties>
-				<db.ip>IP</db.ip>
-				<db.port>PORTA</db.port>
-				<db.path>BANCO</db.path>
-				<db.user>USUARIO</db.user>
-				<db.password>SENHA</db.password>
+				<db.ip>localhost</db.ip>
+				<db.port>5432</db.port>
+				<db.path>n2s</db.path>
+				<db.user>n2s</db.user>
+				<db.password>postgres</db.password>
 			</properties>
 			<build>
 				<plugins>

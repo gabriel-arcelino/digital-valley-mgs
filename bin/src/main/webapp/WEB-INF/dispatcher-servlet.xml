@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!-- was: <?xml version="1.0" encoding="UTF-8"?> -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+        xmlns:tx="http://www.springframework.org/schema/tx"  
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans.xsd
+                http://www.springframework.org/schema/mvc 
+                http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+		http://www.springframework.org/schema/beans 
+                http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                http://www.springframework.org/schema/context 
+                http://www.springframework.org/schema/context/spring-context-3.0.xsd
+                http://www.springframework.org/schema/tx
+                http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+    <bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping"/>
+    <!--
+    Most controllers will use the ControllerClassNameHandlerMapping above, but
+    for the index controller we are using ParameterizableViewController, so we must
+    define an explicit mapping for it.
+    -->
+    
+    <mvc:annotation-driven />
+
+    <context:component-scan base-package="br.ufc.russas.n2s.darwin"/>
+
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
+    
+
+    <bean id="viewResolver"
+          class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+          p:prefix="/WEB-INF/view/"
+          p:suffix=".jsp" />
+
+    <!--
+    The index controller.
+    -->
+    <bean name="daoImpl"  class = "br.ufc.russas.n2s.darwin.dao.DAOImpl">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    
+    <bean name="selecaoDAOIfc"  class = "br.ufc.russas.n2s.darwin.dao.SelecaoDAOImpl" />
+    <bean name="usuarioDAOIfc"  class = "br.ufc.russas.n2s.darwin.dao.UsuarioDAOImpl" />
+    <bean name="avaliacaoDAOIfc"  class = "br.ufc.russas.n2s.darwin.dao.AvaliacaoDAOImpl" />
+    <bean name="documentacaoDAOIfc"  class = "br.ufc.russas.n2s.darwin.dao.DocumentacaoDAOImpl" />
+    <bean name="etapaDAOIfc"  class = "br.ufc.russas.n2s.darwin.dao.EtapaDAOImpl" />
+    <bean name="logDAOIfc"  class = "br.ufc.russas.n2s.darwin.dao.LogDAOImpl" />
+    <bean name="participanteDAOIfc"  class = "br.ufc.russas.n2s.darwin.dao.ParticipanteDAOImpl" />
+    <bean name="indexController"  class = "br.ufc.russas.n2s.darwin.controller.IndexController" />
+    <bean name="avaliarController"  class = "br.ufc.russas.n2s.darwin.controller.AvaliarController" />
+    <bean name="usuarioController"  class = "br.ufc.russas.n2s.darwin.controller.UsuarioController" />
+    <bean name="resultadoEtapaController"  class = "br.ufc.russas.n2s.darwin.controller.ResultadoEtapaController" />
+    <bean name="recursoEtapaController"  class = "br.ufc.russas.n2s.darwin.controller.RecursoEtapaController" />
+    <bean name="resultadoSelecaoController"  class = "br.ufc.russas.n2s.darwin.controller.ResultadoSelecaoController" />
+    <bean name="selecaoServiceIfc"  class = "br.ufc.russas.n2s.darwin.service.SelecaoServiceImpl" />
+    <bean name="usuarioServiceIfc"  class = "br.ufc.russas.n2s.darwin.service.UsuarioServiceImpl" />
+    <bean name="avaliacaoServiceIfc"  class = "br.ufc.russas.n2s.darwin.service.AvaliacaoServiceImpl" />
+    <bean name="etapaServiceIfc"  class = "br.ufc.russas.n2s.darwin.service.EtapaServiceImpl" />
+    <bean name="logServiceIfc"  class = "br.ufc.russas.n2s.darwin.service.LogServiceImpl" />
+    <bean name="participanteServiceIfc"  class = "br.ufc.russas.n2s.darwin.service.ParticipanteServiceImpl" />
+    <bean name="VisualizarDocumentacao"  class = "br.ufc.russas.n2s.darwin.controller.VisualizarDocumentacao" />
+</beans>
