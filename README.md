@@ -3,3 +3,5 @@
 > mvnw clean install flyway:migrate -Pdb
 > OR
 > mvnw.cmd clean install flyway:migrate -Pdb
+
+2020.2-HomeOffice é baseada a versão 2020.1-Sprint6
