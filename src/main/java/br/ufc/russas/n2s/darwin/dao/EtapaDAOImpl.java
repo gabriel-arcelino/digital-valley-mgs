@@ -1,8 +1,15 @@
 package br.ufc.russas.n2s.darwin.dao;
 
+import br.ufc.russas.n2s.darwin.beans.AvaliacaoBeans;
+import br.ufc.russas.n2s.darwin.beans.ParticipanteBeans;
+import br.ufc.russas.n2s.darwin.controller.AvaliarController;
 import br.ufc.russas.n2s.darwin.model.Etapa;
+import br.ufc.russas.n2s.darwin.model.Participante;
 
 import java.util.List;
+
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -31,6 +38,7 @@ public class EtapaDAOImpl implements EtapaDAOIfc{
 
     @Override
     public Etapa atualizaEtapa(Etapa etapa) {
+    	
         return this.daoImpl.atualiza(etapa);
     }
 
