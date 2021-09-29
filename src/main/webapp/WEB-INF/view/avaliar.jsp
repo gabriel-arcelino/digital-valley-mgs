@@ -87,10 +87,11 @@
 								<td>${participante.candidato.nome}</td>
 								<c:if test="${not empty etapa.avaliacoes}">
 									<c:forEach var="avaliacao" items="${etapa.avaliacoes}">
-										<c:if
-											test="${(avaliacao.participante.codParticipante == participante.codParticipante) and (avaliacao.avaliador.codUsuario == avaliador.codUsuario)}">
+										<c:if test="${(avaliacao.participante.codParticipante == participante.codParticipante) and (avaliacao.avaliador.codUsuario == avaliador.codUsuario)}">
 											<c:set var="avaliacaoParticipante" value="${avaliacao}" />
+											
 											<c:if test="${avaliacaoParticipante.estado == PENDENTE}">
+											
 												<td><span class="badge badge-danger">${avaliacao.estado}</span></td>
 												<td>  -</td>
 												<td><button type="button"
