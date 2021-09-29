@@ -1,13 +1,17 @@
 package br.ufc.russas.n2s.darwin.controller;
 
+import br.ufc.russas.n2s.darwin.beans.AvaliacaoBeans;
 import br.ufc.russas.n2s.darwin.beans.DocumentacaoBeans;
 import br.ufc.russas.n2s.darwin.beans.EtapaBeans;
 import br.ufc.russas.n2s.darwin.beans.ParticipanteBeans;
 import br.ufc.russas.n2s.darwin.beans.SelecaoBeans;
 import br.ufc.russas.n2s.darwin.beans.UsuarioBeans;
 import br.ufc.russas.n2s.darwin.model.Arquivo;
+import br.ufc.russas.n2s.darwin.model.Avaliacao;
 import br.ufc.russas.n2s.darwin.model.Documentacao;
 import br.ufc.russas.n2s.darwin.model.Email;
+import br.ufc.russas.n2s.darwin.model.EnumEstadoAvaliacao;
+import br.ufc.russas.n2s.darwin.model.Etapa;
 import br.ufc.russas.n2s.darwin.model.Log;
 import br.ufc.russas.n2s.darwin.model.Participante;
 import br.ufc.russas.n2s.darwin.model.Selecao;
@@ -202,14 +206,13 @@ public class ParticiparEtapaController {
 							}
 						}
 					}
-
+					
 					Documentacao documentacao = new Documentacao();
 					Participante participante = new Participante();
 					participante.setCandidato((UsuarioDarwin) usuario.toBusiness());
 					participante.setData(LocalDateTime.now());
 					documentacao.setCandidato(participante);
 					documentacao.setDocumentos(arquivos);
-
 					if (arquivos.size() > 0) {
 						etapaServiceIfc.participa(inscricao,
 								(ParticipanteBeans) new ParticipanteBeans().toBeans(participante),
@@ -218,7 +221,9 @@ public class ParticiparEtapaController {
 					} else {
 						etapaServiceIfc.participa(inscricao,
 								(ParticipanteBeans) new ParticipanteBeans().toBeans(participante));
+								
 					}
+					
 					this.getLogServiceIfc()
 							.adicionaLog(new Log(LocalDate.now(), (UsuarioDarwin) usuario.toBusiness(),
 									(Selecao) selecao.toBusiness(),
@@ -231,6 +236,8 @@ public class ParticiparEtapaController {
 					Thread sendEmail = new Thread(new Email(usuario, "Inscrição em seleção!", "Inscrição em seleção",
 							"Sua inscrição na <b>Seleção " + selecao.getTitulo() + "</b> foi realizada com sucesso!"));
 					sendEmail.start();
+					
+					
 					HashMap<SelecaoBeans, EtapaBeans> etapasAtuais = new HashMap<>();
 					for (SelecaoBeans s : selecoes) {
 						etapasAtuais.put(s, this.getSelecaoServiceIfc().getEtapaAtual(s));
@@ -239,6 +246,10 @@ public class ParticiparEtapaController {
 					model.addAttribute("selecoes", selecoes);
 					model.addAttribute("etapasAtuais", etapasAtuais);
 					session.setAttribute("status", "success");
+					
+					
+					//AvaliarController avaliar = new AvaliarController();
+					//avaliar.deferirP(participante.getCodParticipante(), inscricao.getCodEtapa());
 					return "redirect:/minhasSelecoes/minhas_Selecoes";
 				} else {
 					throw new Exception(
@@ -263,7 +274,6 @@ public class ParticiparEtapaController {
 			return "redirect:/participarEtapa/inscricao/" + inscricao.getCodEtapa();
 		}
 	}
-
 	@RequestMapping(value = "/{codEtapa}", method = RequestMethod.POST)
 	public @ResponseBody void anexaDocumentacao(@PathVariable long codEtapa, HttpServletRequest request,
 			HttpServletResponse response, @RequestParam("nomeDocumento") String[] nomeDocumento,
