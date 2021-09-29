@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 import javax.persistence.AttributeConverter;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Converter;
 import javax.persistence.Entity;
@@ -36,7 +37,7 @@ public class Participante implements AttributeConverter<LocalDateTime, Timestamp
     @Column(name = "codParticipante")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long codParticipante;
-    @ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="candidato", referencedColumnName="codUsuario")
     private UsuarioDarwin candidato;
     private boolean deferido;
