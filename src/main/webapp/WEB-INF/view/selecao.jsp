@@ -404,7 +404,7 @@ ul {
 												class="fas fa-edit"></i> Editar etapa
 											</a>
 										</c:if>
-
+										<!-- Mensagem de primeiro acesso após o cadastro da seleção 
 										<c:if
 											test="${(selecao.divulgada and ((estadoInscricao == 2) or (estadoInscricao == 3)) and (fn:contains(permissoes, 'ADMINISTRADOR') or (fn:contains(selecao.inscricao.avaliadores, sessionScope.usuarioDarwin))))}">
 											<a
@@ -414,6 +414,7 @@ ul {
 												class="fas fa-clipboard-check"></i> Avaliação
 											</a>
 										</c:if>
+										-->
 
 										<c:if
 											test="${selecao.divulgada and (isResponsavel or fn:contains(permissoes, 'ADMINISTRADOR')) and (etapa.estado ne 'ESPERA')}">
@@ -424,7 +425,7 @@ ul {
 												class="fas fa-exclamation"></i> Pendências de Avaliacão
 											</a>
 										</c:if>
-
+										
 										<c:if
 											test="${(estadoInscricao == 3) and (!selecao.inscricao.divulgadoResultado) and ((fn:contains(permissoes, 'ADMINISTRADOR')) or (isResponsavel))}">
 											<c:set var="pendente" value="false"></c:set>
