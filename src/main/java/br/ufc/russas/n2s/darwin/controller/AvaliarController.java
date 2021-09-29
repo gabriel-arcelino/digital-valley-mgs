@@ -8,9 +8,6 @@ import br.ufc.russas.n2s.darwin.beans.UsuarioBeans;
 import br.ufc.russas.n2s.darwin.model.EnumCriterioDeAvaliacao;
 import br.ufc.russas.n2s.darwin.model.EnumEstadoAvaliacao;
 import br.ufc.russas.n2s.darwin.model.EnumPermissao;
-import br.ufc.russas.n2s.darwin.model.Log;
-import br.ufc.russas.n2s.darwin.model.Selecao;
-import br.ufc.russas.n2s.darwin.model.UsuarioDarwin;
 import br.ufc.russas.n2s.darwin.service.AvaliacaoServiceIfc;
 import br.ufc.russas.n2s.darwin.service.EtapaServiceIfc;
 import br.ufc.russas.n2s.darwin.service.LogServiceIfc;
@@ -19,7 +16,6 @@ import br.ufc.russas.n2s.darwin.service.SelecaoServiceIfc;
 import br.ufc.russas.n2s.darwin.util.Facade;
 import util.Constantes;
 
-import java.time.LocalDate;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -94,101 +90,25 @@ public class AvaliarController {
 		}
 	}
 
-	@RequestMapping(value = "/inscricao/{codEtapa}", method = RequestMethod.GET)
-	public String getIndexInscricao(@PathVariable long codEtapa, Model model, HttpServletRequest request) {
-		EtapaBeans etapa = etapaServiceIfc.getEtapa(codEtapa);
-		HttpSession session = request.getSession();
-		SelecaoBeans selecao = (SelecaoBeans) session.getAttribute("selecao");
-		UsuarioBeans usuario = (UsuarioBeans) session.getAttribute("usuarioDarwin");
-		if (etapa.getAvaliadores().contains(usuario) || (selecao.getResponsaveis().contains(usuario))
-				|| (usuario.getPermissoes().contains(EnumPermissao.ADMINISTRADOR))) {
-			model.addAttribute("avaliador", usuario);
-			model.addAttribute("etapa", etapa);
-			model.addAttribute("participantesEtapa", etapa.getParticipantes());
-			return "avaliar";
-		} else {
-			return "error/404";
-		}
+	public String deferirP(long codPar, long codEtapa) throws IllegalAccessException {
+		EtapaBeans inscricao = etapaServiceIfc.getEtapa(codEtapa);
+		AvaliacaoBeans avaliacao =new AvaliacaoBeans();
+		UsuarioBeans avaliador = inscricao.getAvaliadores().get(0);
+		avaliacao.setAprovado(true);
+		avaliacao.setAvaliador(avaliador);
+		avaliacao.setEstado(EnumEstadoAvaliacao.AVALIADO);
+		avaliacao.setObservacao("");
+		
+		ParticipanteBeans participante = participanteServiceIfc
+				.getParticipante(codPar);
+		avaliacao.setParticipante(participante);
+		inscricao.getParticipantes().add(participante);
+		
+		etapaServiceIfc.setUsuario(avaliador);
+		
+		etapaServiceIfc.avalia(inscricao, avaliacao);
+		return"avaliar";
 	}
-
-	@RequestMapping(value = "/inscricao/{codEtapa}", method = RequestMethod.POST)
-	public String avaliarInscricao(@PathVariable long codEtapa, HttpServletRequest request, Model model) {
-		HttpSession session = request.getSession();
-		UsuarioBeans avaliador = (UsuarioBeans) session.getAttribute("usuarioDarwin");
-		EtapaBeans etapa = null;
-		try {
-			etapa = etapaServiceIfc.getEtapa(codEtapa);
-			AvaliacaoBeans avaliacao = new AvaliacaoBeans();
-			if (etapa.getCriterioDeAvaliacao() == EnumCriterioDeAvaliacao.APROVACAO) {
-				avaliacao.setAprovado((Integer.parseInt(request.getParameter("aprovacao")) == 1));
-			} else if (etapa.getCriterioDeAvaliacao() == EnumCriterioDeAvaliacao.DEFERIMENTO) {
-				if (request.getParameter("deferimento") != null) {
-					avaliacao.setAprovado((Integer.parseInt(request.getParameter("deferimento")) == 1));
-				} else {
-					throw new IllegalArgumentException("Não foi selecionado um resultado para o participante!");
-				}
-			} else if (etapa.getCriterioDeAvaliacao() == EnumCriterioDeAvaliacao.NOTA) {
-				float nota = Float.parseFloat(request.getParameter("nota"));
-				avaliacao.setNota(nota);
-				if (nota >= etapa.getNotaMinima()) {
-					avaliacao.setAprovado(true);
-				} else {
-					avaliacao.setAprovado(false);
-				}
-			}
-
-			avaliacao.setObservacao(request.getParameter("observacoes"));
-			ParticipanteBeans participante = participanteServiceIfc
-					.getParticipante(Long.parseLong(request.getParameter("participante")));
-			avaliacao.setParticipante(participante);
-			avaliacao.setAvaliador(avaliador);
-			avaliacao.setEstado(EnumEstadoAvaliacao.AVALIADO);
-			etapaServiceIfc.setUsuario(avaliador);
-			etapaServiceIfc.avalia(etapa, avaliacao);
-			etapa = this.etapaServiceIfc.getEtapa(etapa.getCodEtapa());
-			this.getLogServiceIfc().adicionaLog(new Log(LocalDate.now(), (UsuarioDarwin) avaliador.toBusiness(),
-					(Selecao) ((SelecaoBeans) session.getAttribute("selecao")).toBusiness(),
-					"O(A) usuario(a) " + avaliador.getNome() + " realizou a avaliação do candidato detentor do CPF: "
-							+ participante.getCandidato().getCPF() + " na etapa " + etapa.getTitulo() + " da seleção "
-							+ ((SelecaoBeans) session.getAttribute("selecao")).getTitulo() + " em " + LocalDate.now()
-							+ "."));
-			model.addAttribute("etapa", etapa);
-			model.addAttribute("avaliador", avaliador);
-			model.addAttribute("participantesEtapa", etapa.getParticipantes());
-			model.addAttribute("mensagem", "Participante avaliado com sucesso!");
-			model.addAttribute("status", "success");
-			return "avaliar";
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-			model.addAttribute("mensagem", e.getMessage());
-			model.addAttribute("avaliador", avaliador);
-			model.addAttribute("participantesEtapa", etapa.getParticipantes());
-			model.addAttribute("status", "danger");
-			return "avaliar";
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-			model.addAttribute("mensagem", "Isso não é um número!");
-			model.addAttribute("avaliador", avaliador);
-			model.addAttribute("participantesEtapa", etapa.getParticipantes());
-			model.addAttribute("status", "danger");
-			return "avaliar";
-		} catch (NullPointerException | IllegalArgumentException e) {
-			e.printStackTrace();
-			model.addAttribute("mensagem", e.getMessage());
-			model.addAttribute("avaliador", avaliador);
-			model.addAttribute("participantesEtapa", etapa.getParticipantes());
-			model.addAttribute("status", "danger");
-			return "avaliar";
-		} catch (Exception e) {
-			e.printStackTrace();
-			model.addAttribute("mensagem", e.getMessage());
-			model.addAttribute("avaliador", avaliador);
-			model.addAttribute("participantesEtapa", etapa.getParticipantes());
-			model.addAttribute("status", "danger");
-			return "avaliar";
-		}
-	}
-
 	@RequestMapping(value = "/{codEtapa}", method = RequestMethod.POST)
 	public String avaliarEtapa(@PathVariable long codEtapa, HttpServletRequest request, Model model) {
 		HttpSession session = request.getSession();
