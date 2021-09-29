@@ -35,11 +35,12 @@ public class EtapaProxy extends Etapa{
     }
     
     public void avalia(Etapa etapa, Avaliacao avaliacao) throws IllegalAccessException{
-        if (this.getUsuario().getPermissoes().contains(EnumPermissao.AVALIADOR) && etapa.isAvaliador(usuario)) {
-            etapa.avalia(avaliacao);
-        } else {
-            throw new IllegalAccessException("Você não é um avaliador da etapa: ".concat(etapa.getTitulo()));
-        }
+		 if (this.getUsuario().getPermissoes().contains(EnumPermissao.AVALIADOR) && etapa.isAvaliador(usuario)) {
+		            etapa.avalia(avaliacao);
+		 } else {
+		            throw new IllegalAccessException("Você não é um avaliador da etapa: ".concat(etapa.getTitulo()));
+         }
+       
     }
     
     public void adicionaAvaliador(Selecao selecao, Etapa etapa, UsuarioDarwin usuario) throws IllegalAccessException {
