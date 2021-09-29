@@ -9,6 +9,7 @@ import br.ufc.russas.n2s.darwin.beans.UsuarioBeans;
 import br.ufc.russas.n2s.darwin.dao.EtapaDAOIfc;
 import br.ufc.russas.n2s.darwin.model.Avaliacao;
 import br.ufc.russas.n2s.darwin.model.Documentacao;
+import br.ufc.russas.n2s.darwin.model.EnumEstadoAvaliacao;
 import br.ufc.russas.n2s.darwin.model.Etapa;
 import br.ufc.russas.n2s.darwin.model.EtapaProxy;
 import br.ufc.russas.n2s.darwin.model.Participante;
@@ -47,7 +48,6 @@ public class EtapaServiceImpl implements EtapaServiceIfc {
 	public void setSelecaoServiceIfc(@Qualifier("selecaoServiceIfc") SelecaoServiceIfc selecaoServiceIfc) {
 		this.selecaoServiceIfc = selecaoServiceIfc;
 	}
-
 	@Override
 	public void setUsuario(UsuarioBeans usuario) {
 		this.usuario = usuario;
@@ -154,9 +154,10 @@ public class EtapaServiceImpl implements EtapaServiceIfc {
 	public void avalia(EtapaBeans etapa, AvaliacaoBeans avaliacao) throws IllegalAccessException {
 		Etapa e = (Etapa) etapa.toBusiness();
 		Avaliacao a = (Avaliacao) avaliacao.toBusiness();
-		EtapaProxy ep = new EtapaProxy((UsuarioDarwin) usuario.toBusiness());
+		EtapaProxy ep = new EtapaProxy((UsuarioDarwin) e.getAvaliadores().get(0));
 		ep.avalia(e, a);
 		this.etapaDAOIfc.atualizaEtapa(e);
+		
 	}
 
 	@Override
@@ -175,8 +176,35 @@ public class EtapaServiceImpl implements EtapaServiceIfc {
 	@Override
 	public void participa(EtapaBeans inscricao, ParticipanteBeans participante) throws IllegalAccessException {
 		Etapa i = (Etapa) inscricao.toBusiness();
-		i.getParticipantes().add((Participante) participante.toBusiness());
+		Participante p = (Participante)participante.toBusiness();
+		i.getParticipantes().add(p);
 		this.etapaDAOIfc.atualizaEtapa(i);
+		
+		//Deferindo o participante
+		i = this.etapaDAOIfc.getEtapa(i);
+		p = i.getParticipantes().get((i.getParticipantes().size()-1));
+		long cod = p.getCodParticipante();
+		System.out.println(p.getCandidato().getNome());
+		System.out.println(cod);
+		participante = (ParticipanteBeans) new ParticipanteBeans().toBeans(p);
+		
+		AvaliacaoBeans avaliacao = new AvaliacaoBeans();
+		avaliacao.setAprovado(true);
+
+		avaliacao.setParticipante(participante);
+		UsuarioBeans avaliador = inscricao.getAvaliadores().get(0);
+		avaliacao.setAvaliador(avaliador);
+		avaliacao.setObservacao("");
+		avaliacao.setEstado(EnumEstadoAvaliacao.AVALIADO);
+						
+		
+		Avaliacao a = (Avaliacao) avaliacao.toBusiness();
+		
+		i.avalia(a);
+		this.etapaDAOIfc.atualizaEtapa(i);
+		
+		
+		
 	}
 
 	@Override
