@@ -61,6 +61,7 @@ public class DAOImpl<T> implements DAOIfc<T> {
 
     @Override
     public T atualiza(T object) {
+    	
         Session session = getSessionFactory().openSession();
         Transaction t = session.beginTransaction();
         try {
