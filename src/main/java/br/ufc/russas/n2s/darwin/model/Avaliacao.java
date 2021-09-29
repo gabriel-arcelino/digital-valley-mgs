@@ -48,7 +48,7 @@ public class Avaliacao implements Serializable {
 	@Enumerated(EnumType.ORDINAL)
 	private EnumEstadoAvaliacao estado;
 	
-	@ManyToOne
+	@ManyToOne(cascade = { CascadeType.PERSIST })
 	@JoinColumn(name = "avaliador", referencedColumnName = "codUsuario")
 	private UsuarioDarwin avaliador;
 
